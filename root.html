@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rishabh Sahil's Cyber Terminal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e17;
+            color: #39ff14;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        #terminal {
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 23, 0.9);
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #ff00ff;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+
+        #output {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        #input-container {
+            display: flex;
+            padding: 0.5rem 1rem;
+            background: #1a1f2e;
+            border-top: 1px solid #ff00ff;
+        }
+
+        #prompt {
+            color: #00ffff;
+            white-space: nowrap;
+        }
+
+        #input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #39ff14;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            caret-color: #ff00ff;
+            padding-left: 0.5rem;
+        }
+
+        #input::selection {
+            background: #ff00ff;
+            color: #0a0e17;
+        }
+
+        .command {
+            color: #39ff14;
+        }
+
+        .dir {
+            color: #00ffff;
+        }
+
+        .error {
+            color: #ff5555;
+        }
+
+        .highlight {
+            color: #ffaa00;
+        }
+
+        .cursor {
+            animation: blink 0.8s step-end infinite;
+        }
+
+        .glitch {
+            animation: glitch 1.5s infinite;
+            text-shadow: 2px 0 #ff0000, -2px 0 #00ff00;
+        }
+
+        .art {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, 0); }
+            80% { transform: translate(2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            body { font-size: 0.9rem; }
+            #output { padding: 0.5rem; }
+            #input-container { padding: 0.4rem 0.5rem; }
+            #input { font-size: 0.9rem; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 0.8rem; }
+            #output { padding: 0.3rem; }
+            #input-container { padding: 0.3rem 0.4rem; }
+            #input, #prompt { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-bg"></canvas>
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="input-container">
+            <span id="prompt">rishabh@cyber:~$ </span>
+            <input type="text" id="input" autocomplete="off" autofocus>
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const input = document.getElementById('input');
+        const prompt = document.getElementById('prompt');
+
+        const portfolioData = {
+            "info": {
+                "name": "Rishabh Sahil",
+                "title": "Full Stack Dev & Open Source Enthusiast",
+                "location": "Ara, Bihar, India",
+                "bio": "4+ years crafting web apps, AI tools, and scalable systems. Passionate about open-source and innovation. Tech is life. 🚀",
+                "quote": "Tech is my life."
+            },
+            "skills": {
+                "languages": ["JavaScript", "Python"],
+                "frameworks": ["Flask", "Django"],
+                "frontend": {
+                    "markup": ["HTML", "EJS", "JSX"],
+                    "styling": ["CSS", "SASS", "Bootstrap"]
+                },
+                "databases": ["MongoDB", "MySQL"],
+                "tools": ["Git", "Heroku"]
+            },
+            "projects": [
+                {
+                    "name": "Rishabh Search Engine",
+                    "description": "Lightweight search engine using Google's CSE.",
+                    "language": "JavaScript",
+                    "link": "https://github.com/rishabhsahilll/rishabh-search-engine"
+                },
+                {
+                    "name": "AI Jarvis WhatsApp Bot",
+                    "description": "AI-powered bot for chats and analysis.",
+                    "language": "JavaScript",
+                    "link": "https://github.com/rishabhsahilll/AI-Jarvis-WhatsApp-Bot"
+                },
+                {
+                    "name": "Vidyapeeth Coaching",
+                    "description": "Python app for coaching management.",
+                    "language": "Python",
+                    "link": "https://github.com/rishabhsahilll/Vidyapeeth-Coaching-Management-Python-Software"
+                },
+                {
+                    "name": "R.S.Y Quotes",
+                    "description": "Flask app for daily quotes.",
+                    "language": "HTML, Python",
+                    "link": "https://github.com/rishabhsahilll/R.S.Y-Quotes-Flask-Project"
+                }
+            ],
+            "contact": {
+                "github": "https://github.com/rishabhsahilll",
+                "portfolio": "https://rishabhsahill.vercel.app/",
+                "instagram": "https://instagram.com/rishabhsahill",
+                "bento": "https://bento.me/rishabhsahil",
+                "email": "rishabhsahilll@gmail.com"
+            },
+            "repositories": [
+                {"name": "rishabhsahilll", "description": "GitHub profile configs.", "language": "Config", "link": "https://github.com/rishabhsahilll/rishabhsahilll", "license": null, "updated": "5 days ago"},
+                {"name": "AI-Jarvis-WhatsApp-Bot", "description": "AI bot for WhatsApp.", "language": "JavaScript", "link": "https://github.com/rishabhsahilll/AI-Jarvis-WhatsApp-Bot", "license": "MIT", "updated": "2 weeks ago"},
+                {"name": "Lyrics-Typer-Python", "description": "Lyrics typing tool.", "language": "Python", "link": "https://github.com/rishabhsahilll/Lyrics-Typer-Python", "license": null, "updated": "last month"},
+                {"name": "logiclab", "description": null, "language": "JavaScript", "link": "https://github.com/rishabhsahilll/logiclab", "license": null, "updated": "Mar 21"},
+                {"name": "Math-Py-Relations", "description": "Math relations solver.", "language": "Python", "link": "https://github.com/rishabhsahilll/Math-Py-Relations", "license": null, "updated": "Mar 20"},
+                {"name": "ViTune", "description": "Music streaming app (fork).", "language": "Kotlin", "link": "https://github.com/rishabhsahilll/ViTune", "license": "GNU GPL v3.0", "updated": "Mar 19"},
+                {"name": "rishabh-search-engine", "description": "Custom search engine.", "language": "JavaScript", "link": "https://github.com/rishabhsahilll/rishabh-search-engine", "license": "GNU GPL v3.0", "updated": "Feb 17"},
+                {"name": "rishabhinsta", "description": "Django social media clone.", "language": "HTML", "link": "https://github.com/rishabhsahilll/rishabhinsta", "license": "MIT", "updated": "Oct 10, 2024"},
+                {"name": "R.S.Y-Quotes-Flask-Project", "description": "Flask quote generator.", "language": "HTML", "link": "https://github.com/rishabhsahilll/R.S.Y-Quotes-Flask-Project", "license": "MIT", "updated": "Aug 9, 2024"},
+                {"name": "my-first-djsngo-projects", "description": "First Django projects.", "language": "HTML", "link": "https://github.com/rishabhsahilll/my-first-djsngo-projects", "license": null, "updated": "Mar 25, 2024"},
+                {"name": "kbc-game", "description": "KBC game in Python.", "language": "Python", "link": "https://github.com/rishabhsahilll/kbc-game", "license": null, "updated": "Mar 19, 2024"},
+                {"name": "AI-Jarvis-Connect-ChatGpt-And-EdgeGpt-4", "description": "AI chatbot integration.", "language": "Python", "link": "https://github.com/rishabhsahilll/AI-Jarvis-Connect-ChatGpt-And-EdgeGpt-4", "license": null, "updated": "Mar 19, 2024"},
+                {"name": "Vidyapeeth-Coaching-Management-Python-Software", "description": "Coaching management tool.", "language": "Python", "link": "https://github.com/rishabhsahilll/Vidyapeeth-Coaching-Management-Python-Software", "license": "MIT", "updated": "Mar 19, 2024"},
+                {"name": "YouTube-Facebook-Instagram-Spotifyplaylist-Downloader", "description": "Media downloader.", "language": "HTML", "link": "https://github.com/rishabhsahilll/YouTube-Facebook-Instagram-Spotifyplaylist-Downloader", "license": null, "updated": "Mar 19, 2024"},
+                {"name": "azinny.x", "description": null, "language": "JavaScript", "link": "https://github.com/axinyyyx/azinny.x", "license": null, "updated": "5 hours ago"},
+                {"name": "rsy.live.tv", "description": null, "language": "HTML", "link": "https://github.com/axinyyyx/rsy.live.tv", "license": null, "updated": "Mar 28"},
+                {"name": "PyPinLocker", "description": "PIN combination generator.", "language": "Python", "link": "https://github.com/axinyyyx/PyPinLocker", "license": null, "updated": "Jan 19"},
+                {"name": "axinyyyx", "description": null, "language": null, "link": "https://github.com/axinyyyx/axinyyyx", "license": null, "updated": "Jan 18"},
+                {"name": "ViTune", "description": "Music streaming app (fork).", "language": "Kotlin", "link": "https://github.com/axinyyyx/ViTune", "license": "GNU GPL v3.0", "updated": "Jan 18"}
+            ]
+        };
+
+        const colorMap = {
+            '0': { name: 'black', fg: '#000000', bg: '#000000' },
+            '1': { name: 'blue', fg: '#000080', bg: '#000080' },
+            '2': { name: 'green', fg: '#008000', bg: '#008000' },
+            '3': { name: 'cyan', fg: '#008080', bg: '#008080' },
+            '4': { name: 'red', fg: '#800000', bg: '#800000' },
+            '5': { name: 'purple', fg: '#800080', bg: '#800080' },
+            '6': { name: 'yellow', fg: '#808000', bg: '#808000' },
+            '7': { name: 'white', fg: '#C0C0C0', bg: '#C0C0C0' },
+            '8': { name: 'gray', fg: '#808080', bg: '#808080' },
+            '9': { name: 'lightblue', fg: '#0000FF', bg: '#0000FF' },
+            'A': { name: 'lightgreen', fg: '#00FF00', bg: '#00FF00' },
+            'B': { name: 'lightcyan', fg: '#00FFFF', bg: '#00FFFF' },
+            'C': { name: 'lightred', fg: '#FF0000', bg: '#FF0000' },
+            'D': { name: 'magenta', fg: '#FF00FF', bg: '#FF00FF' },
+            'E': { name: 'lightyellow', fg: '#FFFF00', bg: '#FFFF00' },
+            'F': { name: 'brightwhite', fg: '#FFFFFF', bg: '#FFFFFF' }
+        };
+
+        const asciiArts = [
+            `
+       .-""""""""-.
+     .'  CYBER  '.
+    /   RISHABH  : 
+   : ,          .'
+   : : ,   CYBER: 
+   : : ,   PUNK : 
+   : : ,        : 
+    : ,         : 
+     '._         _.'
+        ''"""""''
+`,
+            `
+  _____
+ |  ***  | 
+ | *   * | 
+ |* RS  *| 
+ | *   * | 
+ |  ***  | 
+ |_______|
+`,
+            `
+   ///////
+  // HACK //
+ // RISHABH//
+ //  SAHIL //
+  ///////
+`,
+            `
+  .-"""-.
+ /  ***  \\ 
+:  * * *  : 
+: *  RS  * : 
+:  * * *  : 
+ \\  ***  /
+   -"""-
+`,
+            `
+  +-------+
+  | RISH  | 
+  | SAHIL | 
+  | HACKS | 
+  +-------+
+`,
+            `
+  /| /|
+ / |/ |
+/_____| 
+| RS  | 
+|_____| 
+`,
+            `
+  .-+*+-.
+ /  ***  \\ 
+:  RS *  : 
+ \\  ***  /
+   -+*+-
+`
+        ];
+
+        const mockSearchResults = {
+            'google what is python': `
+Python: High-level language by Guido van Rossum (1991).
+- Uses: Web dev, AI, automation.
+- Features: Simple syntax, vast libraries.
+`,
+            'bing what is python': `
+Python: Popular language for ease and readability.
+- Uses: ML, scripting, web apps.
+- Supports: OOP, functional programming.
+`,
+            'insta rishabhsahill': `
+@rishabhsahill: Tech updates & projects.
+- Link: https://instagram.com/rishabhsahill
+`
+        };
+
+        let currentDir = '';
+        let currentPrompt = 'rishabh@cyber:~$ ';
+        let commandHistory = [];
+        let historyIndex = -1;
+        let suggestions = ['info', 'skills', 'projects', 'contact', 'search', 'repos', 'ls', 'dir', 'clear', 'cls', 'help', 'cd', 'color', 'art', 'tree', 'echo', 'ver', 'prompt', 'what'];
+
+        // Simple Levenshtein distance for command suggestions
+        function levenshtein(a, b) {
+            const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+            for (let j = 0; i <= b.length; j++) matrix[j][0] = j;
+            for (let j = 1; j <= b.length; j++) {
+                for (let i = 1; i <= a.length; i++) {
+                    const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[j][i] = Math.min(
+                        matrix[j][i - 1] + 1,
+                        matrix[j - 1][i] + 1,
+                        matrix[j - 1][i - 1] + indicator
+                    );
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        const commands = {
+            'what': () => {
+                return `<span class="highlight">${portfolioData.info.name}</span>: ${portfolioData.info.title}\nRun <span class="command">info</span> for more details.`;
+            },
+            'info': () => {
+                if (currentDir) return `<span class="error">cmd: info</span>`;
+                return `<span class="highlight">${portfolioData.info.name}</span> | ${portfolioData.info.title}\n${portfolioData.info.location}\n${portfolioData.info.bio}`;
+            },
+            'skills': () => {
+                if (currentDir) return `<span class="error">cmd: skills</span>`;
+                return `Lang: <span class="highlight">${portfolioData.skills.languages.join(', ')}</span>
+Frame: <span class="highlight">${portfolioData.skills.frameworks.join(', ')}</span>
+Front: <span class="highlight">${portfolioData.skills.frontend.markup.concat(portfolioData.skills.frontend.styling).join(', ')}</span>
+DB: <span class="highlight">${portfolioData.skills.databases.join(', ')}</span>
+Tools: <span class="highlight">${portfolioData.skills.tools.join(', ')}</span>`;
+            },
+            'projects': () => {
+                if (currentDir) return `<span class="error">cmd: projects</span>`;
+                let output = '';
+                portfolioData.projects.forEach(p => {
+                    output += `<span class="highlight">${p.name}</span>: ${p.description} (${p.language})\nLink: <a href="${p.link}" target="_blank" class="dir">${p.link}</a>\n`;
+                });
+                return output;
+            },
+            'contact': () => {
+                if (currentDir === 'contact') {
+                    return Object.keys(portfolioData.contact).map(k => `<span class="dir">${k}</span>`).join('\n');
+                }
+                commands['cd'](['contact']);
+                return commands['contact']();
+            },
+            'github': () => {
+                if (currentDir !== 'contact') return `<span class="error">cmd: github</span>`;
+                return `<a href="${portfolioData.contact.github}" target="_blank" class="dir">${portfolioData.contact.github}</a>`;
+            },
+            'portfolio': () => {
+                if (currentDir !== 'contact') return `<span class="error">cmd: portfolio</span>`;
+                return `<a href="${portfolioData.contact.portfolio}" target="_blank" class="dir">${portfolioData.contact.portfolio}</a>`;
+            },
+            'instagram': () => {
+                if (currentDir !== 'contact') return `<span class="error">cmd: instagram</span>`;
+                return `<a href="${portfolioData.contact.instagram}" target="_blank" class="dir">${portfolioData.contact.instagram}</a>`;
+            },
+            'bento': () => {
+                if (currentDir !== 'contact') return `<span class="error">cmd: bento</span>`;
+                return `<a href="${portfolioData.contact.bento}" target="_blank" class="dir">${portfolioData.contact.bento}</a>`;
+            },
+            'email': () => {
+                if (currentDir !== 'contact') return `<span class="error">cmd: email</span>`;
+                return `<a href="mailto:${portfolioData.contact.email}" class="dir">${portfolioData.contact.email}</a>`;
+            },
+            'repos': () => {
+                if (currentDir === 'repos') {
+                    return portfolioData.repositories.map(r => `<span class="dir">${r.name}</span>`).join(' ');
+                }
+                commands['cd'](['repos']);
+                return commands['repos']();
+            },
+            'search': () => {
+                if (currentDir === 'search') {
+                    return '<span class="dir">google</span> <span class="dir">bing</span> <span class="dir">insta</span>';
+                }
+                commands['cd'](['search']);
+                return commands['search']();
+            },
+            'google': (args) => {
+                if (currentDir !== 'search') return `<span class="error">cmd: google</span>`;
+                const query = `google ${args.join(' ').replace(/[?!>.]/g, '').trim()}`;
+                return mockSearchResults[query] || `<span class="error">No results for '${args.join(' ')}'. Try 'what is python'.</span>`;
+            },
+            'bing': (args) => {
+                if (currentDir !== 'search') return `<span class="error">cmd: bing</span>`;
+                const query = `bing ${args.join(' ').replace(/[?!>.]/g, '').trim()}`;
+                return mockSearchResults[query] || `<span class="error">No results for '${args.join(' ')}'. Try 'what is python'.</span>`;
+            },
+            'insta': (args) => {
+                if (currentDir !== 'search') return `<span class="error">cmd: insta</span>`;
+                const query = `insta ${args.join(' ').replace(/[?!>.]/g, '').trim()}`;
+                return mockSearchResults[query] || `<span class="error">No results for '${args.join(' ')}'. Try 'rishabhsahill'.</span>`;
+            },
+            ...portfolioData.repositories.reduce((acc, repo) => {
+                acc[repo.name] = () => {
+                    if (currentDir !== 'repos') return `<span class="error">cmd: ${repo.name}</span>`;
+                    let output = `<span class="highlight">${repo.name}</span>`;
+                    if (repo.description) output += `\nDesc: ${repo.description}`;
+                    output += `\nLang: ${repo.language || 'N/A'}\nLink: <a href="${repo.link}" target="_blank" class="dir">${repo.link}</a>`;
+                    if (repo.license) output += `\nLicense: ${repo.license}`;
+                    output += `\nUpdated: ${repo.updated}`;
+                    return output;
+                };
+                return acc;
+            }, {}),
+            'ls': () => {
+                if (currentDir === 'contact') return Object.keys(portfolioData.contact).map(k => `<span class="dir">${k}</span>`).join(' ');
+                if (currentDir === 'search') return '<span class="dir">google</span> <span class="dir">bing</span> <span class="dir">insta</span>';
+                if (currentDir === 'repos') return portfolioData.repositories.map(r => `<span class="dir">${r.name}</span>`).join(' ');
+                return '<span class="dir">info</span> <span class="dir">skills</span> <span class="dir">projects</span> <span class="dir">contact</span> <span class="dir">search</span> <span class="dir">repos</span>';
+            },
+            'dir': () => commands['ls'](),
+            'dir /s': () => {
+                let output = 'Dir: rishabh@cyber\n';
+                if (currentDir === 'contact') {
+                    for (let [k, v] of Object.entries(portfolioData.contact)) output += `<span class="dir">${k}</span>: ${v}\n`;
+                } else if (currentDir === 'search') {
+                    output += '<span class="dir">google</span>\n<span class="dir">bing</span>\n<span class="dir">insta</span>';
+                } else if (currentDir === 'repos') {
+                    portfolioData.repositories.forEach(r => output += `<span class="dir">${r.name}</span>: ${r.description || 'N/A'}\n`);
+                } else {
+                    output += '<span class="dir">info</span>: About\n<span class="dir">skills</span>: Tech stack\n<span class="dir">projects</span>: Projects\n<span class="dir">contact</span>: Contacts\n<span class="dir">search</span>: Search engines\n<span class="dir">repos</span>: Repositories';
+                }
+                return output;
+            },
+            'clear': () => {
+                output.innerHTML = '';
+                const art = asciiArts[Math.floor(Math.random() * asciiArts.length)];
+                return `<span class="glitch art">${art}</span>\nRishabh Sahil's Cyber Terminal\nType <span class="command">help</span> for commands.`;
+            },
+            'cls': () => commands['clear'](),
+            'help': () => {
+                let output = 'Commands:\n';
+                if (currentDir === 'contact') {
+                    output += Object.keys(portfolioData.contact).map(k => `<span class="command">${k}</span>: ${k} link`).join('\n') + '\n';
+                } else if (currentDir === 'search') {
+                    output += '<span class="command">google</span>: Search Google (e.g., google what is python)\n<span class="command">bing</span>: Search Bing\n<span class="command">insta</span>: Search Instagram\n';
+                } else if (currentDir === 'repos') {
+                    output += portfolioData.repositories.map(r => `<span class="command">${r.name}</span>: Repo info`).join('\n') + '\n';
+                } else {
+                    output += '<span class="command">what</span>: Quick intro\n<span class="command">info</span>: About\n<span class="command">skills</span>: Tech stack\n<span class="command">projects</span>: Projects\n<span class="command">contact</span>: Contacts\n<span class="command">search</span>: Search\n<span class="command">repos</span>: Repos\n';
+                }
+                output += '<span class="command">ls/dir</span>: List\n<span class="command">dir /s</span>: Details\n<span class="command">clear/cls</span>: Clear\n<span class="command">cd</span>: Navigate\n<span class="command">color</span>: Colors\n<span class="command">art</span>: ASCII art\n<span class="command">tree</span>: Structure\n<span class="command">echo</span>: Text\n<span class="command">ver</span>: Version\n<span class="command">prompt</span>: Prompt';
+                return output;
+            },
+            'cd': (args) => {
+                if (!args.length) {
+                    currentDir = '';
+                    currentPrompt = 'rishabh@cyber:~$ ';
+                    prompt.textContent = currentPrompt;
+                    suggestions = ['what', 'info', 'skills', 'projects', 'contact', 'search', 'repos', 'ls', 'dir', 'clear', 'cls', 'help', 'cd', 'color', 'art', 'tree', 'echo', 'ver', 'prompt'];
+                    return '';
+                }
+                const dir = args[0];
+                if (['contact', 'search', 'repos'].includes(dir)) {
+                    currentDir = dir;
+                    currentPrompt = `rishabh@cyber:/${dir}$ `;
+                    prompt.textContent = currentPrompt;
+                    suggestions = dir === 'contact' ? Object.keys(portfolioData.contact).concat(['ls', 'dir', 'clear', 'cls', 'help', 'cd', 'color', 'art', 'tree', 'echo', 'ver', 'prompt']) :
+                                 dir === 'search' ? ['google', 'bing', 'insta', 'ls', 'dir', 'clear', 'cls', 'help', 'cd', 'color', 'art', 'tree', 'echo', 'ver', 'prompt'] :
+                                 portfolioData.repositories.map(r => r.name).concat(['ls', 'dir', 'clear', 'cls', 'help', 'cd', 'color', 'art', 'tree', 'echo', 'ver', 'prompt']);
+                    return '';
+                }
+                let hint = '';
+                if (['google', 'bing', 'insta'].includes(dir) && currentDir === 'search') {
+                    hint = ` Try '${dir}' as a command.`;
+                }
+                return `<span class="error">cd: ${dir}: No such dir.${hint}</span>`;
+            },
+            'color': (args) => {
+                if (!args.length) {
+                    document.body.style.background = '#0a0e17';
+                    output.style.background = 'rgba(10, 14, 23, 0.9)';
+                    output.style.color = '#39ff14';
+                    return 'Colors reset.';
+                }
+                if (args[0] === 'help') {
+                    return Object.entries(colorMap).map(([c, {name, fg}]) => `${c} - ${name} (<span style="color: ${fg}">${fg}</span>)`).join('\n') + '\nUse: color <code|name> [bg|fg]';
+                }
+                let color = args[0].toUpperCase();
+                let type = args[1] || 'fg';
+                if (colorMap[color]) {
+                    if (type === 'bg') {
+                        output.style.background = colorMap[color].bg;
+                    } else {
+                        output.style.color = colorMap[color].fg;
+                    }
+                    return `Set ${type} to ${colorMap[color].name}.`;
+                }
+                color = args[0].toLowerCase();
+                for (let [c, {name, fg, bg}] of Object.entries(colorMap)) {
+                    if (name === color) {
+                        if (type === 'bg') {
+                            output.style.background = bg;
+                        } else {
+                            output.style.color = fg;
+                        }
+                        return `Set ${type} to ${name}.`;
+                    }
+                }
+                return `<span class="error">Invalid color: ${args[0]}</span>`;
+            },
+            'art': () => {
+                return `<span class="glitch art">${asciiArts[Math.floor(Math.random() * asciiArts.length)]}</span>`;
+            },
+            'tree': () => {
+                return `
+rishabh@cyber
+├── info
+├── skills
+├── projects
+├── contact
+│   ├── github
+│   ├── portfolio
+│   ├── instagram
+│   ├── bento
+│   └── email
+├── search
+│   ├── google
+│   ├── bing
+│   └── insta
+└── repos
+    ${portfolioData.repositories.length ? portfolioData.repositories.map(r => `├── ${r.name}`).join('\n    ') : '├── (none)'}
+`;
+            },
+            'echo': (args) => {
+                if (!args.length) return 'ECHO on.';
+                const text = args.join(' ').toUpperCase();
+                if (text === 'PATH') return currentDir ? `/${currentDir}` : '/';
+                if (text === 'USER') return 'rishabh';
+                if (text === 'VERSION') return 'Cyber Terminal v1.1.0';
+                if (text === 'PROJECTS') return `${portfolioData.projects.length} projects`;
+                if (text === 'REPOS') return `${portfolioData.repositories.length} repositories`;
+                if (text === 'HELP') return 'Variables: PATH, USER, VERSION, PROJECTS, REPOS';
+                return args.join(' ');
+            },
+            'ver': () => 'Cyber Terminal v1.1.0',
+            'prompt': (args) => {
+                if (!args.length) {
+                    currentPrompt = currentDir ? `rishabh@cyber:/${currentDir}$ ` : 'rishabh@cyber:~$ ';
+                    prompt.textContent = currentPrompt;
+                    return 'Prompt reset.';
+                }
+                const newPrompt = args.join(' ').slice(0, 50);
+                if (!newPrompt.trim()) return `<span class="error">Prompt cannot be empty</span>`;
+                currentPrompt = newPrompt + ' ';
+                prompt.textContent = currentPrompt;
+                return 'Prompt set.';
+            }
+        };
+
+        function executeCommand(cmd) {
+            cmd = cmd.trim();
+            if (!cmd) return '';
+
+            const [command, ...args] = cmd.split(' ');
+            output.innerHTML += `<div><span class="prompt">${prompt.textContent}</span> <span class="command">${cmd}</span></div>`;
+
+            if (commands[command]) {
+                const result = ['cd', 'color', 'google', 'bing', 'insta', 'echo', 'prompt'].includes(command) ? 
+                    commands[command](args) : commands[command]();
+                return result || '';
+            }
+
+            // Suggest similar command
+            const closest = suggestions.reduce((best, curr) => {
+                const dist = levenshtein(command, curr);
+                return dist < best.dist ? { cmd: curr, dist } : best;
+            }, { cmd: '', dist: Infinity });
+            const hint = closest.dist <= 3 ? ` Did you mean '${closest.cmd}'?` : '';
+            return `<span class="error">cmd: ${command}${hint}</span>`;
+        }
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value;
+                commandHistory.push(cmd);
+                historyIndex = commandHistory.length;
+                const result = executeCommand(cmd);
+                if (result) output.innerHTML += `<div>${result}</div>`;
+                input.value = '';
+                output.scrollTop = output.scrollHeight;
+
+                // Play typing sound
+                const audio = new Audio('data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+                audio.play().catch(() => {});
+            } else if (e.key === 'ArrowUp') {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = commandHistory[historyIndex] || '';
+                }
+            } else if (e.key === 'ArrowDown') {
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    input.value = commandHistory[historyIndex];
+                } else {
+                    historyIndex = commandHistory.length;
+                    input.value = '';
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const current = input.value.trim();
+                if (current) {
+                    const matches = suggestions.filter(s => s.startsWith(current));
+                    if (matches.length === 1) input.value = matches[0];
+                }
+            }
+        });
+
+        // Matrix background
+        const canvas = document.getElementById('matrix-bg');
+        const ctx = canvas.getContext('2d');
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        const chars = '01HACKRISHABHサイバーパンク';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#39ff14';
+            ctx.font = `${fontSize}px monospace`;
+            drops.forEach((y, i) => {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 33);
+
+        // Typing effect for welcome message
+        const welcomeText = `<span class="glitch art">${asciiArts[Math.floor(Math.random() * asciiArts.length)]}</span>\nRishabh Sahil's Cyber Terminal\nType <span class="command">help</span> for commands.`;
+        let i = 0;
+        function typeWelcome() {
+            if (i < welcomeText.length) {
+                output.innerHTML += welcomeText.charAt(i);
+                i++;
+                setTimeout(typeWelcome, 20);
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+        typeWelcome();
+
+        window.addEventListener('load', () => input.focus());
+        document.getElementById('terminal').addEventListener('click', () => input.focus());
+    </script>
+</body>
+</html>
