@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Binary Wallpaper Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        #canvas {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ffffff50;
+            border-radius: 8px;
+        }
+        .download-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+            input, select, button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="flex justify-center items-start py-8">
+    <div class="container bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-6 sm:p-8 max-w-lg w-full mx-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">Ultimate Wallpaper Generator</h2>
+        <div class="space-y-4">
+            <textarea id="nameInput" placeholder="Enter names (one per line, e.g., RISHABH\nSAHIL)" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" required></textarea>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <label class="flex items-center gap-2">
+                    <input type="radio" name="device" value="android" checked class="text-blue-500">
+                    <span class="text-gray-700">Android</span>
+                </label>
+                <label class="flex items-center gap-2">
+                    <input type="radio" name="device" value="pc" class="text-blue-500">
+                    <span class="text-gray-700">PC</span>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-1">Background Start Color</label>
+                    <input type="color" id="bgStartColor" value="#1e3a8a" class="w-full h-10 rounded-lg cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Background End Color</label>
+                    <input type="color" id="bgEndColor" value="#f87171" class="w-full h-10 rounded-lg cursor-pointer">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Custom Background Image URL (Optional)</label>
+                <input type="text" id="bgImageUrl" placeholder="Enter image URL" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Upload Background Image (Optional)</label>
+                <input type="file" id="bgImageFile" accept="image/*" class="w-full p-3 border border-gray-300 rounded-lg">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Geometric Pattern</label>
+                <select id="geometricPattern" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="none">None</option>
+                    <option value="triangles">Triangles</option>
+                    <option value="grid">Grid</option>
+                    <option value="diamonds">Diamonds</option>
+                    <option value="circles">Circles</option>
+                    <option value="hexagons">Hexagons</option>
+                    <option value="waves">Waves</option>
+                    <option value="zigzag">Zigzag</option>
+                    <option value="dots">Dots</option>
+                    <option value="crosses">Crosses</option>
+                    <option value="stars">Stars</option>
+                    <option value="spirals">Spirals</option>
+                    <option value="lines">Diagonal Lines</option>
+                    <option value="squares">Squares</option>
+                    <option value="chevrons">Chevrons</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Font</label>
+                <select id="fontSelect" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Arial">Arial</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Garamond">Garamond</option>
+                    <option value="Book Antiqua">Book Antiqua</option>
+                    <option value="Arial Narrow">Arial Narrow</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Lucida Sans">Lucida Sans</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Futura">Futura</option>
+                    <option value="Gill Sans">Gill Sans</option>
+                    <option value="Optima">Optima</option>
+                    <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
+                    <option value="Avant Garde">Avant Garde</option>
+                    <option value="Perpetua">Perpetua</option>
+                    <option value="Rockwell">Rockwell</option>
+                    <option value="Baskerville">Baskerville</option>
+                    <option value="Didot">Didot</option>
+                    <option value="Bodoni MT">Bodoni MT</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Cambria">Cambria</option>
+                    <option value="Consolas">Consolas</option>
+                    <option value="Monaco">Monaco</option>
+                    <option value="Andale Mono">Andale Mono</option>
+                    <option value="OCR A Std">OCR A Std</option>
+                    <option value="Copperplate">Copperplate</option>
+                    <option value="Papyrus">Papyrus</option>
+                    <option value="Brush Script MT">Brush Script MT</option>
+                    <option value="Lobster">Lobster</option>
+                    <option value="Dancing Script">Dancing Script</option>
+                    <option value="Pacifico">Pacifico</option>
+                    <option value="Amatic SC">Amatic SC</option>
+                    <option value="Indie Flower">Indie Flower</option>
+                    <option value="Shadows Into Light">Shadows Into Light</option>
+                    <option value="Satisfy">Satisfy</option>
+                    <option value="Great Vibes">Great Vibes</option>
+                    <option value="Allura">Allura</option>
+                    <option value="Sacramento">Sacramento</option>
+                    <option value="Kaushan Script">Kaushan Script</option>
+                    <option value="Marck Script">Marck Script</option>
+                    <option value="Parisienne">Parisienne</option>
+                    <option value="Caveat">Caveat</option>
+                    <option value="Homemade Apple">Homemade Apple</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Font Size: <span id="fontSizeValue">40</span>px</label>
+                <input type="range" id="fontSize" min="20" max="100" value="40" class="w-full" oninput="document.getElementById('fontSizeValue').textContent = this.value">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Text Position</label>
+                <select id="textPosition" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="center">Center</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Text Display</label>
+                <select id="textDisplay" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="binary">Binary</option>
+                    <option value="text">Text</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Display Mode</label>
+                <select id="displayMode" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="horizontal">Horizontal</option>
+                    <option value="vertical">Vertical</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Text Style</label>
+                <select id="textStyle" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="normal">Normal</option>
+                    <option value="bold">Bold</option>
+                    <option value="italic">Italic</option>
+                    <option value="bold italic">Bold + Italic</option>
+                    <option value="underline">Underline</option>
+                    <option value="bold underline">Bold + Underline</option>
+                    <option value="italic underline">Italic + Underline</option>
+                    <option value="bold italic underline">Bold + Italic + Underline</option>
+                    <option value="strikethrough">Strikethrough</option>
+                    <option value="bold strikethrough">Bold + Strikethrough</option>
+                    <option value="italic strikethrough">Italic + Strikethrough</option>
+                    <option value="bold italic strikethrough">Bold + Italic + Strikethrough</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" id="lineSpacing" checked class="text-blue-500">
+                    <span class="text-gray-700">Add Line Spacing</span>
+                </label>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Text Effect</label>
+                <select id="textEffect" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="none">None</option>
+                    <option value="soft-glow">Soft Glow</option>
+                    <option value="hard-glow">Hard Glow</option>
+                    <option value="double-glow">Double Glow</option>
+                    <option value="pulsing-glow">Pulsing Glow</option>
+                    <option value="shadow">Shadow</option>
+                    <option value="outline">Outline</option>
+                    <option value="emboss">Emboss</option>
+                    <option value="neon-pulse">Neon Pulse</option>
+                    <option value="gradient-glow">Gradient Glow</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-700 mb-1">Text Gradient Start Color</label>
+                    <input type="color" id="textStartColor" value="#ff0000" class="w-full h-10 rounded-lg cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Text Gradient End Color</label>
+                    <input type="color" id="textEndColor" value="#ff69b4" class="w-full h-10 rounded-lg cursor-pointer">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 mb-1">Download Format</label>
+                <select id="downloadFormat" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="png">PNG</option>
+                    <option value="jpg">JPG</option>
+                    <option value="gif">GIF (Animated Pattern)</option>
+                </select>
+            </div>
+
+            <button onclick="generateWallpaper()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors">Generate Wallpaper</button>
+        </div>
+        <canvas id="canvas" class="mt-6 w-full"></canvas>
+        <a id="downloadLink" href="#" download="wallpaper.png" class="download-btn hidden mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            Download Wallpaper
+        </a>
+    </div>
+
+    <script>
+        function charToBinary(char) {
+            return char.charCodeAt(0).toString(2).padStart(8, '0');
+        }
+
+        function textToBinary(text) {
+            return text.split('')
+                .map(char => charToBinary(char))
+                .join(' ');
+        }
+
+        function drawGeometricPattern(ctx, width, height, patternType, offset = 0) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+
+            if (patternType === 'triangles') {
+                for (let i = 0; i < width; i += 50) {
+                    for (let j = 0; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, j);
+                        ctx.lineTo(i + 25 + offset, j + 25);
+                        ctx.lineTo(i, j + 50);
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'grid') {
+                for (let i = 0; i < width; i += 50) {
+                    ctx.beginPath();
+                    ctx.moveTo(i + offset, 0);
+                    ctx.lineTo(i + offset, height);
+                    ctx.stroke();
+                }
+                for (let j = 0; j < height; j += 50) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, j + offset);
+                    ctx.lineTo(width, j + offset);
+                    ctx.stroke();
+                }
+            } else if (patternType === 'diamonds') {
+                for (let i = 0; i < width; i += 50) {
+                    for (let j = 0; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(i + 25 + offset, j);
+                        ctx.lineTo(i + 50 + offset, j + 25);
+                        ctx.lineTo(i + 25 + offset, j + 50);
+                        ctx.lineTo(i + offset, j + 25);
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'circles') {
+                for (let i = 25; i < width; i += 50) {
+                    for (let j = 25; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.arc(i + offset, j, 15, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'hexagons') {
+                for (let i = 0; i < width; i += 60) {
+                    for (let j = 0; j < height; j += 52) {
+                        ctx.beginPath();
+                        ctx.moveTo(i + 15 + offset, j);
+                        ctx.lineTo(i + 45 + offset, j);
+                        ctx.lineTo(i + 60 + offset, j + 26);
+                        ctx.lineTo(i + 45 + offset, j + 52);
+                        ctx.lineTo(i + 15 + offset, j + 52);
+                        ctx.lineTo(i + offset, j + 26);
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'waves') {
+                for (let j = 0; j < height; j += 50) {
+                    ctx.beginPath();
+                    for (let i = 0; i < width; i += 20) {
+                        ctx.lineTo(i, j + Math.sin((i + offset) * 0.1) * 10);
+                    }
+                    ctx.stroke();
+                }
+            } else if (patternType === 'zigzag') {
+                for (let j = 0; j < height; j += 50) {
+                    ctx.beginPath();
+                    let up = true;
+                    for (let i = 0; i < width; i += 25) {
+                        ctx.lineTo(i + offset, j + (up ? -15 : 15));
+                        up = !up;
+                    }
+                    ctx.stroke();
+                }
+            } else if (patternType === 'dots') {
+                for (let i = 25; i < width; i += 50) {
+                    for (let j = 25; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.arc(i + offset, j, 5, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                        ctx.fill();
+                    }
+                }
+            } else if (patternType === 'crosses') {
+                for (let i = 25; i < width; i += 50) {
+                    for (let j = 25; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(i - 10 + offset, j - 10);
+                        ctx.lineTo(i + 10 + offset, j + 10);
+                        ctx.moveTo(i + 10 + offset, j - 10);
+                        ctx.lineTo(i - 10 + offset, j + 10);
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'stars') {
+                for (let i = 25; i < width; i += 50) {
+                    for (let j = 25; j < height; j += 50) {
+                        ctx.beginPath();
+                        for (let k = 0; k < 5; k++) {
+                            ctx.lineTo(
+                                i + offset + Math.cos(k * 4 * Math.PI / 5) * 10,
+                                j + Math.sin(k * 4 * Math.PI / 5) * 10
+                            );
+                            ctx.lineTo(
+                                i + offset + Math.cos((k + 0.5) * 4 * Math.PI / 5) * 5,
+                                j + Math.sin((k + 0.5) * 4 * Math.PI / 5) * 5
+                            );
+                        }
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'spirals') {
+                for (let i = 50; i < width; i += 100) {
+                    for (let j = 50; j < height; j += 100) {
+                        ctx.beginPath();
+                        for (let t = 0; t < Math.PI * 2; t += 0.1) {
+                            let r = t * 2;
+                            ctx.lineTo(i + offset + r * Math.cos(t), j + r * Math.sin(t));
+                        }
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'lines') {
+                for (let i = 0; i < width + height; i += 50) {
+                    ctx.beginPath();
+                    ctx.moveTo(i + offset, 0);
+                    ctx.lineTo(i - height + offset, height);
+                    ctx.stroke();
+                }
+            } else if (patternType === 'squares') {
+                for (let i = 0; i < width; i += 50) {
+                    for (let j = 0; j < height; j += 50) {
+                        ctx.beginPath();
+                        ctx.rect(i + offset, j, 40, 40);
+                        ctx.stroke();
+                    }
+                }
+            } else if (patternType === 'chevrons') {
+                for (let j = 0; j < height; j += 50) {
+                    for (let i = 0; i < width; i += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(i + offset, j + 25);
+                        ctx.lineTo(i + 25 + offset, j);
+                        ctx.lineTo(i + 50 + offset, j + 25);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function applyTextEffect(ctx, effectType, textStartColor, textEndColor, xPos, yPos, line) {
+            if (effectType === 'soft-glow') {
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 10;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 1;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'hard-glow') {
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 3;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'double-glow') {
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 10;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 1;
+                ctx.strokeText(line, xPos, yPos);
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 2;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'pulsing-glow') {
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 15;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 2;
+                ctx.strokeText(line, xPos, yPos);
+                ctx.shadowBlur = 5;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 1;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'shadow') {
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = 5;
+                ctx.shadowOffsetX = 3;
+                ctx.shadowOffsetY = 3;
+            } else if (effectType === 'outline') {
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 2;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'emboss') {
+                ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
+                ctx.shadowBlur = 2;
+                ctx.shadowOffsetX = -1;
+                ctx.shadowOffsetY = -1;
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'neon-pulse') {
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 20;
+                ctx.strokeStyle = textStartColor;
+                ctx.lineWidth = 3;
+                ctx.strokeText(line, xPos, yPos);
+                ctx.shadowBlur = 10;
+                ctx.strokeStyle = textEndColor;
+                ctx.lineWidth = 1;
+                ctx.strokeText(line, xPos, yPos);
+            } else if (effectType === 'gradient-glow') {
+                const gradient = ctx.createLinearGradient(xPos - 50, yPos, xPos + 50, yPos);
+                gradient.addColorStop(0, textStartColor);
+                gradient.addColorStop(1, textEndColor);
+                ctx.shadowColor = textStartColor;
+                ctx.shadowBlur = 15;
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 2;
+                ctx.strokeText(line, xPos, yPos);
+            }
+        }
+
+        function generateWallpaper() {
+            const names = document.getElementById('nameInput').value.trim().split('\n').filter(name => name.trim() !== '');
+            if (names.length === 0) {
+                alert('Please enter at least one name!');
+                return;
+            }
+
+            const device = document.querySelector('input[name="device"]:checked').value;
+            const bgStartColor = document.getElementById('bgStartColor').value;
+            const bgEndColor = document.getElementById('bgEndColor').value;
+            const bgImageUrl = document.getElementById('bgImageUrl').value.trim();
+            const bgImageFile = document.getElementById('bgImageFile').files[0];
+            const geometricPattern = document.getElementById('geometricPattern').value;
+            const font = document.getElementById('fontSelect').value;
+            const fontSize = document.getElementById('fontSize').value;
+            const textPosition = document.getElementById('textPosition').value;
+            const textDisplay = document.getElementById('textDisplay').value;
+            const displayMode = document.getElementById('displayMode').value;
+            const textStyle = document.getElementById('textStyle').value;
+            const lineSpacing = document.getElementById('lineSpacing').checked;
+            const textEffect = document.getElementById('textEffect').value;
+            const textStartColor = document.getElementById('textStartColor').value;
+            const textEndColor = document.getElementById('textEndColor').value;
+            const downloadFormat = document.getElementById('downloadFormat').value;
+
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions based on device
+            if (device === 'android') {
+                canvas.width = 1080;
+                canvas.height = 1920;
+            } else {
+                canvas.width = 1920;
+                canvas.height = 1080;
+            }
+
+            // Prepare text
+            let displayTexts = [];
+            if (textDisplay === 'binary') {
+                displayTexts = names.map(name => textToBinary(name));
+            } else {
+                displayTexts = names;
+            }
+
+            // Draw background and text
+            function drawCanvas(offset = 0) {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw background
+                if (bgImageFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            if (geometricPattern !== 'none') {
+                                drawGeometricPattern(ctx, canvas.width, canvas.height, geometricPattern, offset);
+                            }
+                            drawText();
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(bgImageFile);
+                } else if (bgImageUrl) {
+                    const img = new Image();
+                    img.crossOrigin = "Anonymous";
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        if (geometricPattern !== 'none') {
+                            drawGeometricPattern(ctx, canvas.width, canvas.height, geometricPattern, offset);
+                        }
+                        drawText();
+                    };
+                    img.onerror = function() {
+                        drawDefaultBackground(offset);
+                        drawText();
+                    };
+                    img.src = bgImageUrl;
+                } else {
+                    drawDefaultBackground(offset);
+                    drawText();
+                }
+
+                function drawDefaultBackground(offset) {
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, bgStartColor);
+                    gradient.addColorStop(1, bgEndColor);
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    if (geometricPattern !== 'none') {
+                        drawGeometricPattern(ctx, canvas.width, canvas.height, geometricPattern, offset);
+                    }
+                }
+
+                function drawText() {
+                    // Set text style
+                    let fontStyle = '';
+                    if (textStyle.includes('bold')) fontStyle += 'bold ';
+                    if (textStyle.includes('italic')) fontStyle += 'italic ';
+                    ctx.font = `${fontStyle}${fontSize}px ${font}`;
+                    if (textStyle.includes('underline')) {
+                        ctx.textDecoration = 'underline';
+                    } else if (textStyle.includes('strikethrough')) {
+                        ctx.textDecoration = 'line-through';
+                    }
+
+                    // Set text alignment
+                    if (textPosition === 'left') {
+                        ctx.textAlign = 'left';
+                    } else if (textPosition === 'right') {
+                        ctx.textAlign = 'right';
+                    } else {
+                        ctx.textAlign = 'center';
+                    }
+                    ctx.textBaseline = 'middle';
+
+                    // Split text into lines
+                    const maxWidth = canvas.width - (textPosition === 'center' ? 40 : 80);
+                    const finalLines = [];
+                    if (displayMode === 'vertical') {
+                        displayTexts.forEach(text => {
+                            if (textDisplay === 'binary') {
+                                finalLines.push(...text.split(' '));
+                            } else {
+                                finalLines.push(text);
+                            }
+                        });
+                    } else {
+                        displayTexts.forEach(text => {
+                            let lines = textDisplay === 'binary' ? text.split(' ') : text.split(' ');
+                            let line = '';
+                            for (let i = 0; i < lines.length; i++) {
+                                const testLine = line + lines[i] + ' ';
+                                const metrics = ctx.measureText(testLine);
+                                if (metrics.width > maxWidth && i > 0) {
+                                    finalLines.push(line);
+                                    line = lines[i] + ' ';
+                                } else {
+                                    line = testLine;
+                                }
+                            }
+                            finalLines.push(line);
+                        });
+                    }
+
+                    // Draw lines of text with gradient and effect
+                    const lineHeight = device === 'android' ? (lineSpacing ? parseInt(fontSize) + 10 : parseInt(fontSize)) : (lineSpacing ? parseInt(fontSize) + 20 : parseInt(fontSize) + 10);
+                    const startY = canvas.height / 2 - (finalLines.length - 1) * lineHeight / 2;
+                    const xPos = textPosition === 'left' ? 40 : textPosition === 'right' ? canvas.width - 40 : canvas.width / 2;
+
+                    finalLines.forEach((line, index) => {
+                        const yPos = startY + index * lineHeight;
+
+                        // Create gradient for text
+                        const textGradient = ctx.createLinearGradient(xPos - maxWidth / 2, yPos, xPos + maxWidth / 2, yPos);
+                        textGradient.addColorStop(0, textStartColor);
+                        textGradient.addColorStop(1, textEndColor);
+                        ctx.fillStyle = textGradient;
+
+                        // Apply text effect if enabled
+                        if (textEffect !== 'none') {
+                            applyTextEffect(ctx, textEffect, textStartColor, textEndColor, xPos, yPos, line);
+                        } else {
+                            ctx.shadowBlur = 0;
+                            ctx.shadowOffsetX = 0;
+                            ctx.shadowOffsetY = 0;
+                        }
+
+                        ctx.fillText(line, xPos, yPos);
+
+                        // Manually draw underline or strikethrough if needed
+                        if (textStyle.includes('underline')) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = textStartColor;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(xPos - ctx.measureText(line).width / 2, yPos + 5);
+                            ctx.lineTo(xPos + ctx.measureText(line).width / 2, yPos + 5);
+                            ctx.stroke();
+                        } else if (textStyle.includes('strikethrough')) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = textStartColor;
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(xPos - ctx.measureText(line).width / 2, yPos);
+                            ctx.lineTo(xPos + ctx.measureText(line).width / 2, yPos);
+                            ctx.stroke();
+                        }
+                    });
+                }
+            }
+
+            // Handle download
+            if (downloadFormat === 'gif') {
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: canvas.width,
+                    height: canvas.height
+                });
+
+                // Create animation frames
+                for (let i = 0; i < 10; i++) {
+                    drawCanvas(i * 2);
+                    gif.addFrame(canvas, { delay: 100 });
+                }
+
+                gif.on('finished', function(blob) {
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = URL.createObjectURL(blob);
+                    downloadLink.download = `${names[0] || 'wallpaper'}.gif`;
+                    downloadLink.classList.remove('hidden');
+                });
+
+                gif.render();
+            } else {
+                drawCanvas();
+                const downloadLink = document.getElementById('downloadLink');
+                const dataUrl = canvas.toDataURL(`image/${downloadFormat === 'jpg' ? 'jpeg' : 'png'}`, downloadFormat === 'jpg' ? 0.9 : 1.0);
+                downloadLink.href = dataUrl;
+                downloadLink.download = `${names[0] || 'wallpaper'}.${downloadFormat}`;
+                downloadLink.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
