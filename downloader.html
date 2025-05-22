@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All-in-One Video Downloader</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const App = () => {
+      const [url, setUrl] = useState('');
+      const [platform, setPlatform] = useState('youtube');
+      const [contentType, setContentType] = useState('video');
+      const [quality, setQuality] = useState('720p');
+      const [downloadStatus, setDownloadStatus] = useState('');
+
+      const platforms = ['YouTube', 'Instagram', 'Facebook', 'Snapchat'];
+      const contentTypes = {
+        youtube: ['Video', 'Playlist', 'Audio'],
+        instagram: ['Video', 'Story', 'Post'],
+        facebook: ['Video', 'Post'],
+        snapchat: ['Story', 'Post']
+      };
+      const qualities = ['360p', '720p', '1080p', 'MP3'];
+
+      const handleDownload = async (e) => {
+        e.preventDefault();
+        setDownloadStatus('Processing...');
+
+        // Placeholder for backend API call
+        try {
+          const response = await fetch('/api/download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url, platform, contentType, quality })
+          });
+          const data = await response.json();
+          if (data.success) {
+            setDownloadStatus(`Download started: ${data.downloadUrl}`);
+            // Trigger download (e.g., create a link and click it)
+            const link = document.createElement('a');
+            link.href = data.downloadUrl;
+            link.download = data.filename || 'download';
+            link.click();
+          } else {
+            setDownloadStatus(`Error: ${data.message}`);
+          }
+        } catch (error) {
+          setDownloadStatus(`Error: ${error.message}`);
+        }
+      };
+
+      return (
+        <div className="max-w-lg w-full mx-auto p-6 bg-gray-800 rounded-lg shadow-xl">
+          <h1 className="text-3xl font-bold text-center mb-6 text-indigo-400">All-in-One Video Downloader</h1>
+          <form onSubmit={handleDownload} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">URL</label>
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Enter video/story/post URL"
+                className="w-full p-2 mt-1 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Platform</label>
+              <select
+                value={platform}
+                onChange={(e) => setPlatform(e.target.value.toLowerCase())}
+                className="w-full p-2 mt-1 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
+              >
+                {platforms.map((plat) => (
+                  <option key={plat} value={plat.toLowerCase()}>
+                    {plat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Content Type</label>
+              <select
+                value={contentType}
+                onChange={(e) => setContentType(e.target.value.toLowerCase())}
+                className="w-full p-2 mt-1 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
+              >
+                {contentTypes[platform].map((type) => (
+                  <option key={type} value={type.toLowerCase()}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Quality</label>
+              <select
+                value={quality}
+                onChange={(e) => setQuality(e.target.value)}
+                className="w-full p-2 mt-1 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
+              >
+                {qualities.map((q) => (
+                  <option key={q} value={q}>
+                    {q}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="submit"
+              className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md transition duration-200"
+            >
+              Download
+            </button>
+          </form>
+          {downloadStatus && (
+            <p className="mt-4 text-center text-sm text-gray-300">{downloadStatus}</p>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
