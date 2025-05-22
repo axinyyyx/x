@@ -30,30 +30,38 @@
       };
       const qualities = ['360p', '720p', '1080p', 'MP3'];
 
-      const handleDownload = async (e) => {
+      const handleDownload = (e) => {
         e.preventDefault();
         setDownloadStatus('Processing...');
 
-        // Placeholder for backend API call
+        // Simulate download logic (client-side)
         try {
-          const response = await fetch('/api/download', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url, platform, contentType, quality })
-          });
-          const data = await response.json();
-          if (data.success) {
-            setDownloadStatus(`Download started: ${data.downloadUrl}`);
-            // Trigger download (e.g., create a link and click it)
-            const link = document.createElement('a');
-            link.href = data.downloadUrl;
-            link.download = data.filename || 'download';
-            link.click();
-          } else {
-            setDownloadStatus(`Error: ${data.message}`);
+          // For demonstration, assume URL is a direct media link (e.g., MP4)
+          // In reality, platforms like YouTube require stream extraction
+          const filename = `${platform}_${contentType}_${quality}.${quality === 'MP3' ? 'mp3' : 'mp4'}`;
+          
+          // Create a download link
+          const link = document.createElement('a');
+          
+          // If MP3, simulate audio extraction (not possible client-side without heavy libraries)
+          if (quality === 'MP3') {
+            setDownloadStatus('MP3 conversion not supported client-side. Please use a direct audio URL or backend.');
+            return;
           }
+
+          // For playlists, simulate multiple downloads (not implemented fully)
+          if (contentType === 'playlist') {
+            setDownloadStatus('Playlist downloading not supported client-side. Please use a single video URL.');
+            return;
+          }
+
+          // Assume URL is a direct video/story/post link
+          link.href = url; // In practice, this needs to be a resolved stream URL
+          link.download = filename;
+          link.click();
+          setDownloadStatus(`Download started: ${filename}`);
         } catch (error) {
-          setDownloadStatus(`Error: ${error.message}`);
+          setDownloadStatus(`Error: ${error.message || 'Invalid URL or platform restriction'}`);
         }
       };
 
@@ -67,7 +75,7 @@
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter video/story/post URL"
+                placeholder="Enter video/story/post URL (direct link)"
                 className="w-full p-2 mt-1 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white"
                 required
               />
@@ -124,6 +132,9 @@
           {downloadStatus && (
             <p className="mt-4 text-center text-sm text-gray-300">{downloadStatus}</p>
           )}
+          <p className="mt-4 text-center text-xs text-gray-400">
+            Note: This client-side app requires direct media URLs. Some platforms may not work due to CORS or authentication restrictions.
+          </p>
         </div>
       );
     };
