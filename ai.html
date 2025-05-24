@@ -5,37 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI-Powered YouLearn Redirect</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #1e3a8a, #4c1d95);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .btn-animate {
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+    .btn-animate:active {
+      transform: scale(0.95);
+    }
+    .input-focus {
+      transition: all 0.3s ease;
+    }
+    .input-focus:focus {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+  </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen">
-  <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-    <div class="flex justify-between mb-4">
-      <button id="langEn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">English</button>
-      <button id="langHi" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">हिन्दी</button>
+<body class="gradient-bg flex items-center justify-center min-h-screen p-4">
+  <div class="glass-effect p-6 rounded-2xl shadow-xl w-full max-w-sm sm:max-w-md">
+    <div class="flex justify-center mb-4">
+      <button id="langEn" class="btn-animate bg-blue-600 text-white px-4 py-2 rounded-full mx-2 text-sm sm:text-base hover:bg-blue-700"><i class="fa-solid fa-globe mr-2"></i>English</button>
+      <button id="langHi" class="btn-animate bg-gray-600 text-white px-4 py-2 rounded-full mx-2 text-sm sm:text-base hover:bg-gray-700"><i class="fa-solid fa-globe mr-2"></i>हिन्दी</button>
     </div>
-    <h1 id="title" class="text-2xl font-bold text-center mb-4 text-blue-300">AI-Powered YouLearn Redirect</h1>
-    <p id="subtitle" class="text-center text-gray-400 mb-4">Enter a YouTube video URL to learn with AI</p>
+    <h1 id="title" class="text-xl sm:text-2xl font-bold text-center mb-4 text-blue-200">AI-Powered YouLearn Redirect</h1>
+    <p id="subtitle" class="text-center text-gray-300 mb-4 text-sm sm:text-base">Enter a YouTube video URL to learn with AI</p>
     <div class="mb-4">
-      <label id="label" for="youtubeUrl" class="block text-sm font-medium text-gray-300">YouTube Video URL</label>
-      <input
-        type="text"
-        id="youtubeUrl"
-        placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
-        class="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
+      <label id="label" for="youtubeUrl" class="block text-sm font-medium text-gray-200">YouTube Video URL</label>
+      <div class="relative">
+        <input
+          type="text"
+          id="youtubeUrl"
+          placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+          class="input-focus mt-1 block w-full p-3 border border-gray-600 rounded-xl bg-gray-800 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+        >
+        <i class="fa-brands fa-youtube absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
     </div>
     <button
       id="redirectBtn"
-      class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition disabled:bg-gray-500"
+      class="btn-animate w-full bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 transition disabled:bg-gray-500 text-sm sm:text-base flex items-center justify-center"
       disabled
     >
-      Learn with AI
+      <i class="fa-solid fa-rocket mr-2"></i><span id="btnText">Learn with AI</span>
     </button>
-    <p id="error" class="text-red-400 text-sm mt-2 hidden">Please enter a valid YouTube URL</p>
+    <p id="error" class="text-red-400 text-sm mt-2 text-center hidden">Please enter a valid YouTube URL</p>
   </div>
 
   <script>
     const youtubeUrlInput = document.getElementById('youtubeUrl');
     const redirectBtn = document.getElementById('redirectBtn');
+    const btnText = document.getElementById('btnText');
     const errorMsg = document.getElementById('error');
     const title = document.getElementById('title');
     const subtitle = document.getElementById('subtitle');
@@ -50,7 +77,7 @@
         title.textContent = 'AI-Powered YouLearn Redirect';
         subtitle.textContent = 'Enter a YouTube video URL to learn with AI';
         label.textContent = 'YouTube Video URL';
-        redirectBtn.textContent = 'Learn with AI';
+        btnText.textContent = 'Learn with AI';
         errorMsg.textContent = 'Please enter a valid YouTube URL';
         langEn.classList.add('bg-blue-600', 'hover:bg-blue-700');
         langEn.classList.remove('bg-gray-600', 'hover:bg-gray-700');
@@ -60,7 +87,7 @@
         title.textContent = 'AI के साथ YouLearn रीडायरेक्ट';
         subtitle.textContent = 'YouTube वीडियो URL दर्ज करें और AI के साथ सीखें';
         label.textContent = 'YouTube वीडियो URL';
-        redirectBtn.textContent = 'AI के साथ सीखें';
+        btnText.textContent = 'AI के साथ सीखें';
         errorMsg.textContent = 'कृपया एक मान्य YouTube URL दर्ज करें';
         langHi.classList.add('bg-blue-600', 'hover:bg-blue-700');
         langHi.classList.remove('bg-gray-600', 'hover:bg-gray-700');
@@ -91,8 +118,12 @@
       const url = youtubeUrlInput.value.trim();
       const videoId = extractVideoId(url);
       if (videoId) {
-        const redirectUrl = `https://app.youlearn.ai/${currentLang}/learn/content/${videoId}`;
-        window.location.href = redirectUrl;
+        btnText.textContent = currentLang === 'en' ? 'Redirecting...' : 'रीडायरेक्ट हो रहा है...';
+        redirectBtn.disabled = true;
+        setTimeout(() => {
+          const redirectUrl = `https://app.youlearn.ai/${currentLang}/learn/content/${videoId}`;
+          window.location.href = redirectUrl;
+        }, 500);
       }
     });
 
