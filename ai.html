@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouLearn Redirector</title>
+  <title>AI-Powered YouLearn Redirect</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 flex items-center justify-center min-h-screen">
   <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-    <h1 class="text-2xl font-bold text-center mb-4 text-white">YouLearn Video Redirect</h1>
+    <h1 class="text-2xl font-bold text-center mb-4 text-blue-300">AI se Seekhiye with YouLearn</h1>
+    <p class="text-center text-gray-400 mb-4">Enter a YouTube video URL to learn with AI in Hindi</p>
     <div class="mb-4">
       <label for="youtubeUrl" class="block text-sm font-medium text-gray-300">YouTube Video URL</label>
       <input
@@ -18,29 +19,18 @@
         class="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
     </div>
-    <div class="mb-4">
-      <label for="language" class="block text-sm font-medium text-gray-300">Language</label>
-      <select
-        id="language"
-        class="mt-1 block w-full p-2 border border-gray-600 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="en">English (en)</option>
-        <option value="hi">Hindi (hi)</option>
-      </select>
-    </div>
     <button
       id="redirectBtn"
       class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition disabled:bg-gray-500"
       disabled
     >
-      Redirect to YouLearn
+      AI ke Saath Seekhein
     </button>
     <p id="error" class="text-red-400 text-sm mt-2 hidden">Please enter a valid YouTube URL</p>
   </div>
 
   <script>
     const youtubeUrlInput = document.getElementById('youtubeUrl');
-    const languageSelect = document.getElementById('language');
     const redirectBtn = document.getElementById('redirectBtn');
     const errorMsg = document.getElementById('error');
 
@@ -65,9 +55,8 @@
     redirectBtn.addEventListener('click', () => {
       const url = youtubeUrlInput.value.trim();
       const videoId = extractVideoId(url);
-      const lang = languageSelect.value;
       if (videoId) {
-        const redirectUrl = `https://app.youlearn.ai/${lang}/content/${videoId}`;
+        const redirectUrl = `https://app.youlearn.ai/hi/learn/content/${videoId}`;
         window.location.href = redirectUrl;
       }
     });
