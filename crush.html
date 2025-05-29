@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Valentine's Day</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+    body {
+
+      background: url(https://wallpapers.com/images/hd/love-background-wsbmkdbn5ni383kb.jpg) cover no-repeat;
+
+    }
+
+
+    .bounce2 {
+
+      animation: bounce2 2s ease infinite;
+
+    }
+
+
+    @keyframes bounce2 {
+
+      0%, 20%, 50%, 80%, 100% {
+
+        transform: translateY(0);
+
+      }
+
+      40% {
+
+        transform: translateY(-20px);
+
+      }
+
+      60% {
+
+        transform: translateY(-10px);
+
+      }
+
+    }
+
+
+    .no-button {
+
+      position: relative;
+
+      transition: all 0.3s ease;
+
+    }
+
+  </style>
+
+</head>
+
+<body class="flex items-center justify-center h-screen">
+
+  <div class="flex flex-col items-center p-4">
+
+    <img id="imageDisplay" src="./images/image1.gif" alt="Cute kitten with flowers" class="rounded-md h-[300px]" style="object-fit: cover;" />
+
+    <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4">Will you be my Valentine?</h2>
+
+    <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
+
+      <button id="yesButton"
+
+        class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium disabled:pointer-events-none disabled:opacity-50 hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
+
+        Yes
+
+      </button>
+
+      <button id="noButton"
+
+        class="no-button inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium transition disabled:pointer-events-none disabled:opacity-50 hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
+
+        No
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script type="module">
+
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+
+
+    const yesButton = document.getElementById('yesButton');
+
+    const noButton = document.getElementById('noButton');
+
+    const imageDisplay = document.getElementById('imageDisplay');
+
+    const valentineQuestion = document.getElementById('valentineQuestion');
+
+    const responseButtons = document.getElementById('responseButtons');
+
+
+    let noClickCount = 0;
+
+    let buttonHeight = 48;
+
+    let buttonWidth = 80;
+
+    let fontSize = 20;
+
+    const sentences = [
+
+      "Are you sure?",
+
+      "Pookie please...",
+
+      "Don't do this to me :(",
+
+      "You're breaking my heart 💔",
+
+      "I'm gonna cry... 😭",
+
+      "Fine, be that way... 😢"
+
+    ];
+
+    const imagePaths = [
+
+      "./images/image1.gif",
+
+      "./images/image2.gif",
+
+      "./images/image3.gif",
+
+      "./images/image4.gif",
+
+      "./images/image5.gif",
+
+      "./images/image6.gif",
+
+      "./images/image7.gif"
+
+    ];
+
+
+   
+
+    const moveNoButton = () => {
+
+      const x = Math.random() * (window.innerWidth - noButton.offsetWidth);
+
+      const y = Math.random() * (window.innerHeight - noButton.offsetHeight);
+
+      noButton.style.position = "absolute";
+
+      noButton.style.left = ${x}px;
+
+      noButton.style.top = ${y}px;
+
+    };
+
+
+    noButton.addEventListener('click', function () {
+
+      if (noClickCount < sentences.length) {
+
+        valentineQuestion.textContent = sentences[noClickCount];
+
+        imageDisplay.src = imagePaths[noClickCount];
+
+        noClickCount++;
+
+        moveNoButton();
+
+       
+
+        buttonHeight += 20;
+
+        buttonWidth += 20;
+
+        fontSize += 5;
+
+        yesButton.style.height = ${buttonHeight}px;
+
+        yesButton.style.width = ${buttonWidth}px;
+
+        yesButton.style.fontSize = ${fontSize}px;
+
+      }
+
+    });
+
+
+    yesButton.addEventListener('click', () => {
+
+      imageDisplay.src = './images/image7.gif';
+
+      valentineQuestion.textContent = "Yay! That's like my pookieee❤️";
+
+      responseButtons.style.display = 'none';
+
+      confetti();
+
+    });
+
+  </script>
+
+</body>
+
+</html>
