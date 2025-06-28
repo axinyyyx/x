@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
@@ -6,7 +6,7 @@
    <title>Color Lab</title>
    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
    <style>
-       /* Dynamic Gradient Background */
+       /* General Body Styling */
        body {
            font-family: 'Roboto', sans-serif;
            display: flex;
@@ -15,124 +15,117 @@
            justify-content: center;
            min-height: 100vh;
            margin: 0;
-           background: linear-gradient(135deg, var(--bg-color1), var(--bg-color2));
-           color: #ecf0f1;
-           overflow-x: hidden;
-           transition: background 0.5s ease;
+           background: linear-gradient(135deg, #2c3e50, #34495e); /* Dark blue gradient */
+           color: #ecf0f1; /* Light text */
+           overflow-x: hidden; /* Prevent horizontal scroll */
        }
 
-       /* Main Container with Enhanced Transparency */
+       /* Main Container */
        .container {
-           background-color: rgba(44, 62, 80, 0.85);
+           background-color: rgba(44, 62, 80, 0.95); /* Slightly transparent dark blue */
            padding: 30px;
-           border-radius: 15px;
-           box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+           border-radius: 12px;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Soft shadow */
            text-align: center;
            width: 90%;
-           max-width: 650px;
+           max-width: 600px;
            box-sizing: border-box;
-           backdrop-filter: blur(10px);
-           -webkit-backdrop-filter: blur(10px);
-           border: 1px solid rgba(255, 255, 255, 0.15);
-           position: relative;
-           min-height: 550px;
+           backdrop-filter: blur(8px); /* Frosted glass effect */
+           -webkit-backdrop-filter: blur(8px);
+           border: 1px solid rgba(255, 255, 255, 0.1);
+           position: relative; /* For tab content positioning */
+           min-height: 500px; /* Ensure enough height */
            display: flex;
            flex-direction: column;
-           overflow: hidden;
+           overflow: hidden; /* Hide overflow from tabs */
        }
 
-       /* Title with Neon Glow */
+       /* Title */
        h1 {
            color: #ecf0f1;
-           margin-bottom: 30px;
-           font-size: 2.5em;
+           margin-bottom: 25px;
+           font-size: 2.2em;
            font-weight: 700;
-           text-shadow: 0 0 10px rgba(52, 152, 219, 0.8), 0 0 20px rgba(52, 152, 219, 0.4);
+           text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
        }
 
-       /* Tab Navigation with Hover Effects */
+       /* Tab Navigation */
        .tabs {
            display: flex;
            justify-content: center;
-           margin-bottom: 30px;
-           border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+           margin-bottom: 25px;
+           border-bottom: 1px solid rgba(255, 255, 255, 0.2);
        }
 
        .tab-button {
            background-color: transparent;
            border: none;
-           padding: 12px 25px;
-           font-size: 1.1em;
+           padding: 12px 20px;
+           font-size: 1em;
            color: #bdc3c7;
            cursor: pointer;
-           transition: all 0.3s ease;
-           border-radius: 8px 8px 0 0;
+           transition: color 0.3s, background-color 0.3s;
+           outline: none;
+           border-radius: 6px 6px 0 0;
            font-weight: 500;
-           position: relative;
        }
 
        .tab-button:hover {
            color: #ecf0f1;
-           background-color: rgba(255, 255, 255, 0.1);
-           transform: translateY(-2px);
+           background-color: rgba(255, 255, 255, 0.05);
        }
 
        .tab-button.active {
-           color: #1abc9c;
-           background-color: rgba(255, 255, 255, 0.15);
-           border-bottom: 3px solid #1abc9c;
+           color: #3498db; /* Blue accent */
+           background-color: rgba(255, 255, 255, 0.1);
+           border-bottom: 2px solid #3498db;
            font-weight: 700;
        }
 
-       /* Tab Content Wrapper */
+       /* Tab Content Wrapper for transitions */
        .tab-content-wrapper {
-           flex-grow: 1;
-           position: relative;
+           flex-grow: 1; /* Allows content to fill space */
+           position: relative; /* Crucial for absolute positioning of tabs */
            width: 100%;
-           min-height: 400px;
+           min-height: 350px; /* Ensure enough space for content inside */
        }
 
        .tab-content {
-           position: absolute;
+           position: absolute; /* Position tabs relative to wrapper */
            top: 0;
            left: 0;
            width: 100%;
            display: flex;
            flex-direction: column;
            align-items: center;
-           padding-top: 15px;
+           padding-top: 10px;
            opacity: 0;
-           transform: translateX(100%);
+           transform: translateX(100%); /* Start off-screen */
            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-           visibility: hidden;
+           visibility: hidden; /* Hide completely when not active */
        }
 
        .tab-content.active {
            opacity: 1;
-           transform: translateX(0);
-           visibility: visible;
-           position: static;
+           transform: translateX(0); /* Slide into view */
+           visibility: visible; /* Make visible */
+           position: static; /* Take up space in the flow */
        }
 
        /* Color Picker Tab Elements */
        #color-display-box {
-           width: 160px;
-           height: 160px;
-           border: 3px solid rgba(255, 255, 255, 0.4);
-           margin: 25px auto;
-           background-color: #000000;
-           border-radius: 12px;
-           transition: background-color 0.3s ease, box-shadow 0.3s ease;
+           width: 150px;
+           height: 150px;
+           border: 2px solid rgba(255, 255, 255, 0.3);
+           margin: 20px auto;
+           background-color: #000000; /* Default black */
+           border-radius: 10px;
+           transition: background-color 0.2s ease;
            position: relative;
-           cursor: pointer;
-           box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+           cursor: pointer; /* Indicate clickability */
        }
 
-       #color-display-box:hover {
-           box-shadow: 0 0 20px rgba(26, 188, 156, 0.7);
-       }
-
-       #color-picker-input {
+       #color-picker-input { /* Hidden native color input */
            position: absolute;
            top: 0;
            left: 0;
@@ -147,35 +140,28 @@
            align-items: center;
            justify-content: center;
            width: 90%;
-           max-width: 500px;
-           margin-bottom: 20px;
+           max-width: 450px;
+           margin-bottom: 15px;
        }
 
        .slider-group label {
-           width: 60px;
+           width: 50px;
            text-align: right;
-           margin-right: 20px;
+           margin-right: 15px;
            font-weight: 400;
            color: #bdc3c7;
-           text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
        }
 
        .slider-group input[type="range"] {
            flex-grow: 1;
-           height: 12px;
-           border-radius: 6px;
-           background: #444;
+           height: 10px;
+           border-radius: 5px;
+           background: #555;
            outline: none;
            -webkit-appearance: none;
            appearance: none;
            cursor: grab;
-           transition: background 0.3s ease;
        }
-
-       .slider-group input[type="range"]:hover {
-           background: #555;
-       }
-
        .slider-group input[type="range"]:active {
            cursor: grabbing;
        }
@@ -183,31 +169,22 @@
        .slider-group input[type="range"]::-webkit-slider-thumb {
            -webkit-appearance: none;
            appearance: none;
-           width: 24px;
-           height: 24px;
+           width: 20px;
+           height: 20px;
            border-radius: 50%;
-           background: #1abc9c;
-           border: 3px solid #ecf0f1;
+           background: #3498db;
+           border: 2px solid #ecf0f1;
            cursor: grab;
-           transition: background 0.2s ease, transform 0.2s ease;
+           transition: background 0.1s;
        }
-
-       .slider-group input[type="range"]::-webkit-slider-thumb:hover {
-           transform: scale(1.1);
-       }
-
        .slider-group input[type="range"]::-moz-range-thumb {
-           width: 24px;
-           height: 24px;
+           width: 20px;
+           height: 20px;
            border-radius: 50%;
-           background: #1abc9c;
-           border: 3px solid #ecf0f1;
+           background: #3498db;
+           border: 2px solid #ecf0f1;
            cursor: grab;
-           transition: background 0.2s ease, transform 0.2s ease;
-       }
-
-       .slider-group input[type="range"]::-moz-range-thumb:hover {
-           transform: scale(1.1);
+           transition: background 0.1s;
        }
 
        #red-slider::-webkit-slider-thumb { background: #e74c3c; }
@@ -215,54 +192,49 @@
        #blue-slider::-webkit-slider-thumb { background: #3498db; }
 
        .slider-group span {
-           width: 40px;
+           width: 35px;
            text-align: left;
-           margin-left: 15px;
+           margin-left: 10px;
            font-weight: 500;
            color: #ecf0f1;
-           text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
        }
 
        .code-output {
-           background-color: rgba(0, 0, 0, 0.35);
-           padding: 12px 20px;
-           border-radius: 6px;
-           margin-top: 15px;
-           font-family: 'Courier New', monospace;
-           font-size: 0.95em;
+           background-color: rgba(0, 0, 0, 0.3);
+           padding: 10px 15px;
+           border-radius: 5px;
+           margin-top: 20px;
+           font-family: monospace;
+           font-size: 0.9em;
            color: #a8dadc;
-           border: 1px dashed rgba(255, 255, 255, 0.15);
+           border: 1px dashed rgba(255, 255, 255, 0.1);
            cursor: copy;
            position: relative;
-           user-select: text;
+           user-select: text; /* Allow text selection for manual copy */
            word-break: break-all;
-           transition: background-color 0.3s ease, transform 0.2s ease;
        }
-
        .code-output:hover {
-           background-color: rgba(0, 0, 0, 0.45);
-           transform: translateY(-2px);
+           background-color: rgba(0, 0, 0, 0.4);
        }
 
        .copy-feedback {
            position: absolute;
-           top: -30px;
+           top: -25px;
            left: 50%;
            transform: translateX(-50%);
-           background-color: #2ecc71;
+           background-color: #2ecc71; /* Green success */
            color: white;
-           padding: 6px 12px;
-           border-radius: 5px;
-           font-size: 0.8em;
+           padding: 5px 10px;
+           border-radius: 4px;
+           font-size: 0.75em;
            opacity: 0;
            transition: opacity 0.3s ease-out, top 0.3s ease-out;
-           pointer-events: none;
+           pointer-events: none; /* Allows clicks to pass through */
            white-space: nowrap;
        }
-
        .copy-feedback.show {
            opacity: 1;
-           top: -40px;
+           top: -35px;
        }
 
        /* Color Mixing Lab Elements */
@@ -270,159 +242,121 @@
            display: flex;
            align-items: center;
            justify-content: center;
-           margin-bottom: 20px;
+           margin-bottom: 15px;
            flex-wrap: wrap;
            width: 100%;
-           max-width: 450px;
+           max-width: 400px;
        }
 
        .mixing-input-row label {
            font-weight: 400;
-           margin-right: 15px;
+           margin-right: 10px;
            color: #bdc3c7;
-           width: 70px;
+           width: 60px;
            text-align: right;
-           text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
        }
 
        .mixing-input-row select {
            flex-grow: 1;
-           padding: 10px;
-           border-radius: 6px;
-           border: 1px solid rgba(255, 255, 255, 0.25);
-           background-color: rgba(0, 0, 0, 0.25);
+           padding: 8px;
+           border-radius: 5px;
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           background-color: rgba(0, 0, 0, 0.2);
            color: #ecf0f1;
-           font-size: 0.95em;
+           font-size: 0.9em;
            outline: none;
-           max-width: 160px;
-           appearance: none;
+           max-width: 150px;
+           appearance: none; /* Hide default arrow */
            -webkit-appearance: none;
            background-image: url('data:image/svg+xml;utf8,<svg fill="%23ecf0f1" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
            background-repeat: no-repeat;
-           background-position: right 10px center;
-           transition: background-color 0.3s ease;
-       }
-
-       .mixing-input-row select:hover {
-           background-color: rgba(0, 0, 0, 0.35);
+           background-position: right 8px center;
        }
 
        .mixing-preview-box {
-           width: 70px;
-           height: 35px;
-           border: 1px solid rgba(255, 255, 255, 0.25);
-           border-radius: 5px;
+           width: 60px;
+           height: 30px;
+           border: 1px solid rgba(255, 255, 255, 0.2);
+           border-radius: 4px;
            background-color: black;
-           transition: background-color 0.3s ease, box-shadow 0.3s ease;
-           margin-left: 15px;
-           position: relative;
-           cursor: pointer;
-       }
-
-       .mixing-preview-box:hover {
-           box-shadow: 0 0 10px rgba(26, 188, 156, 0.5);
-       }
-
-       .mixing-preview-box input[type="color"] {
-           position: absolute;
-           top: 0;
-           left: 0;
-           width: 100%;
-           height: 100%;
-           opacity: 0;
-           cursor: pointer;
+           transition: background-color 0.2s ease;
+           margin-left: 10px;
        }
 
        #mixed-result-box {
-           width: 130px;
-           height: 70px;
-           border: 3px solid rgba(255, 255, 255, 0.4);
-           border-radius: 10px;
+           width: 120px;
+           height: 60px;
+           border: 2px solid rgba(255, 255, 255, 0.3);
+           border-radius: 8px;
            background-color: black;
-           margin: 25px auto;
-           transition: background-color 0.3s ease, box-shadow 0.3s ease;
-           box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-       }
-
-       #mixed-result-box:hover {
-           box-shadow: 0 0 25px rgba(26, 188, 156, 0.7);
+           margin: 20px auto;
+           transition: background-color 0.2s ease;
+           box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
        }
 
        .mixing-info {
-           background-color: rgba(52, 73, 94, 0.7);
-           padding: 20px;
-           border-radius: 10px;
-           margin-top: 25px;
+           background-color: rgba(52, 73, 94, 0.6);
+           padding: 15px;
+           border-radius: 8px;
+           margin-top: 20px;
            color: #bdc3c7;
-           font-size: 0.95em;
+           font-size: 0.9em;
            text-align: left;
-           line-height: 1.5;
-           border: 1px dashed rgba(189, 195, 199, 0.2);
-           box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+           line-height: 1.4;
+           border: 1px dashed rgba(189, 195, 199, 0.15);
        }
-
        .mixing-info strong {
            color: #ecf0f1;
-           text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
        }
-
        .mixing-info ul {
            list-style-type: disc;
-           margin-left: 25px;
+           margin-left: 20px;
            padding-left: 0;
-           margin-top: 15px;
+           margin-top: 10px;
        }
-
        .mixing-info li {
-           margin-bottom: 8px;
+           margin-bottom: 5px;
        }
 
        /* Footer */
        .footer {
-           margin-top: 50px;
-           padding: 20px;
-           background-color: rgba(0, 0, 0, 0.25);
-           border-radius: 10px;
-           font-size: 0.9em;
+           margin-top: 40px;
+           padding: 15px;
+           background-color: rgba(0, 0, 0, 0.2);
+           border-radius: 8px;
+           font-size: 0.85em;
            color: #bdc3c7;
            width: 80%;
-           max-width: 450px;
+           max-width: 400px;
            text-align: center;
-           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-           transition: background-color 0.3s ease;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
        }
-
-       .footer:hover {
-           background-color: rgba(0, 0, 0, 0.35);
-       }
-
        .footer a {
-           color: #1abc9c;
+           color: #3498db;
            text-decoration: none;
            font-weight: bold;
-           transition: color 0.3s ease;
+           transition: color 0.3s;
        }
-
        .footer a:hover {
-           color: #16a085;
+           color: #2980b9;
            text-decoration: underline;
        }
 
-       /* Responsive Adjustments */
+       /* Responsive adjustments */
        @media (max-width: 480px) {
            .container {
-               padding: 25px;
+               padding: 20px;
            }
            h1 {
-               font-size: 2em;
+               font-size: 1.8em;
            }
            .tab-button {
-               padding: 10px 20px;
-               font-size: 1em;
+               padding: 10px 15px;
+               font-size: 0.9em;
            }
            #color-display-box {
-               width: 130px;
-               height: 130px;
+               width: 120px;
+               height: 120px;
            }
            .slider-group {
                flex-direction: column;
@@ -431,23 +365,21 @@
            }
            .slider-group label {
                width: auto;
-               margin-bottom: 8px;
+               margin-bottom: 5px;
                text-align: left;
            }
            .slider-group input[type="range"] {
-               width: 100%;
+               width: calc(100% - 20px); /* Adjust width */
                margin-left: 0;
            }
            .slider-group span {
-               width
-
-: 100%;
+               width: 100%;
                text-align: right;
                margin-left: 0;
            }
            .code-output {
-               font-size: 0.85em;
-               padding: 10px 15px;
+               font-size: 0.8em;
+               padding: 8px 10px;
            }
            .mixing-input-row {
                flex-direction: column;
@@ -455,7 +387,7 @@
            }
            .mixing-input-row label {
                width: auto;
-               margin-bottom: 8px;
+               margin-bottom: 5px;
            }
            .mixing-input-row select {
                width: 100%;
@@ -463,15 +395,15 @@
            }
            .mixing-preview-box {
                margin-left: 0;
-               margin-top: 12px;
+               margin-top: 10px;
            }
            #mixed-result-box {
-               width: 110px;
-               height: 60px;
+               width: 100px;
+               height: 50px;
            }
            .mixing-info {
-               font-size: 0.85em;
-               padding: 15px;
+               font-size: 0.8em;
+               padding: 10px;
            }
        }
    </style>
@@ -517,10 +449,6 @@
                    RGB: rgb(0, 0, 0)
                    <span class="copy-feedback" id="rgb-copy-feedback">Copied!</span>
                </div>
-               <div id="python-output" class="code-output">
-                   Python RGB: [0, 0, 0]
-                   <span class="copy-feedback" id="python-copy-feedback">Copied!</span>
-               </div>
                <div id="binary-output" class="code-output">
                    Binary: [00000000, 00000000, 00000000]
                    <span class="copy-feedback" id="binary-copy-feedback">Copied!</span>
@@ -529,14 +457,13 @@
 
            <div id="mixing" class="tab-content">
                <h2>Color Simulation</h2>
-               <p style="color: #bdc3c7; font-size: 0.95em; margin-bottom: 25px;">
-                   Explore how object colors appear under various light sources.
+               <p style="color: #bdc3c7; font-size: 0.9em; margin-bottom: 20px;">
+                   Understand how object colors appear under different light sources.
                </p>
 
                <div class="mixing-input-row">
                    <label for="object-color-select">Object:</label>
                    <select id="object-color-select">
-                       <option value="custom">Custom (Pick Color)</option>
                        <option value="red">Red</option>
                        <option value="green">Green</option>
                        <option value="blue">Blue</option>
@@ -545,34 +472,13 @@
                        <option value="cyan">Cyan</option>
                        <option value="white" selected>White</option>
                        <option value="black">Black</option>
-                       <option value="gray">Gray</option>
-                       <option value="purple">Purple</option>
-                       <option value="orange">Orange</option>
-                       <option value="pink">Pink</option>
-                       <option value="brown">Brown</option>
-                       <option value="beige">Beige</option>
-                       <option value="turquoise">Turquoise</option>
-                       <option value="lime">Lime</option>
-                       <option value="indigo">Indigo</option>
-                       <option value="violet">Violet</option>
-                       <option value="maroon">Maroon</option>
-                       <option value="navy">Navy</option>
-                       <option value="olive">Olive</option>
-                       <option value="teal">Teal</option>
-                       <option value="coral">Coral</option>
-                       <option value="salmon">Salmon</option>
-                       <option value="gold">Gold</option>
-                       <option value="silver">Silver</option>
                    </select>
-                   <div id="object-preview-box" class="mixing-preview-box">
-                       <input type="color" id="object-color-picker" value="#ffffff">
-                   </div>
+                   <div id="object-preview-box" class="mixing-preview-box"></div>
                </div>
 
                <div class="mixing-input-row">
                    <label for="light-color-select">Light:</label>
                    <select id="light-color-select">
-                       <option value="custom">Custom (Pick Color)</option>
                        <option value="red">Red</option>
                        <option value="green">Green</option>
                        <option value="blue">Blue</option>
@@ -581,42 +487,32 @@
                        <option value="cyan">Cyan</option>
                        <option value="white" selected>White</option>
                        <option value="black">Black</option>
-                       <option value="gray">Gray</option>
-                       <option value="purple">Purple</option>
-                       <option value="orange">Orange</option>
-                       <option value="pink">Pink</option>
-                       <option value="brown">Brown</option>
-                       <option value="beige">Beige</option>
-                       <option value="turquoise">Turquoise</option>
-                       <option value="lime">Lime</option>
-                       <option value="indigo">Indigo</option>
-                       <option value="violet">Violet</option>
-                       <option value="maroon">Maroon</option>
-                       <option value="navy">Navy</option>
-                       <option value="olive">Olive</option>
-                       <option value="teal">Teal</option>
-                       <option value="coral">Coral</option>
-                       <option value="salmon">Salmon</option>
-                       <option value="gold">Gold</option>
-                       <option value="silver">Silver</option>
                    </select>
-                   <div id="light-preview-box" class="mixing-preview-box">
-                       <input type="color" id="light-color-picker" value="#ffffff">
-                   </div>
+                   <div id="light-preview-box" class="mixing-preview-box"></div>
                </div>
 
                <div id="mixed-result-box"></div>
 
+               <div class="mixing-info">
+                   <p>Colors we perceive are a result of **light reflecting off surfaces**.</p>
+                   <ul>
+                       <li>An object **absorbs** certain colors of light and **reflects** others.</li>
+                       <li>The light source must **contain** the color an object reflects for us to see that color.</li>
+                   </ul>
+                   <p>Try these common scenarios:</p>
+                   <ul>
+                       <li>**Red apple** under **green light**: Appears **black**. (Apple reflects red, but only green light is available.)</li>
+                       <li>**Green leaf** under **red light**: Appears **black**.</li>
+                       <li>**White paper** under **blue light**: Appears **blue**. (White reflects all colors, so it reflects the blue light.)</li>
+                   </ul>
+               </div>
+
                <div id="mixer-rgb-output" class="code-output">
-                   RGB: rgb(255, 255, 255)
+                   RGB: rgb(0, 0, 0)
                    <span class="copy-feedback" id="mixer-rgb-copy-feedback">Copied!</span>
                </div>
-               <div id="mixer-python-output" class="code-output">
-                   Python RGB: [255, 255, 255]
-                   <span class="copy-feedback" id="mixer-python-copy-feedback">Copied!</span>
-               </div>
                <div id="mixer-binary-output" class="code-output">
-                   Binary: [11111111, 11111111, 11111111]
+                   Binary: [00000000, 00000000, 00000000]
                    <span class="copy-feedback" id="mixer-binary-copy-feedback">Copied!</span>
                </div>
            </div>
@@ -628,18 +524,7 @@
    </div>
 
    <script>
-       // --- Dynamic Background Gradient ---
-       function setRandomGradient() {
-           const colors = [
-               ['#2c3e50', '#34495e'], ['#1a3c34', '#2a6041'], ['#3c2f5f', '#5e3a8c'],
-               ['#4b134f', '#6f1a7e'], ['#1e3a5f', '#355c7d'], ['#4a2c3e', '#6b3e5b']
-           ];
-           const randomIndex = Math.floor(Math.random() * colors.length);
-           document.documentElement.style.setProperty('--bg-color1', colors[randomIndex][0]);
-           document.documentElement.style.setProperty('--bg-color2', colors[randomIndex][1]);
-       }
-
-       // --- Utility Functions ---
+       // --- Utility Functions (Core Helpers) ---
        function hexToRgb(hex) {
            const r = parseInt(hex.slice(1, 3), 16);
            const g = parseInt(hex.slice(3, 5), 16);
@@ -663,10 +548,10 @@
            messageElement.classList.add('show');
            setTimeout(() => {
                messageElement.classList.remove('show');
-           }, 1000);
+           }, 1200); // Shorter duration for quick feedback
        }
 
-       // --- Global Element References ---
+       // --- Global Element References (Efficient Access) ---
        const tabButtons = document.querySelectorAll('.tab-button');
        const tabContents = document.querySelectorAll('.tab-content');
 
@@ -681,11 +566,9 @@
        const blueValueSpan = document.getElementById('blue-value');
        const hexOutput = document.getElementById('hex-output');
        const rgbOutput = document.getElementById('rgb-output');
-       const pythonOutput = document.getElementById('python-output');
        const binaryOutput = document.getElementById('binary-output');
        const hexCopyFeedback = document.getElementById('hex-copy-feedback');
        const rgbCopyFeedback = document.getElementById('rgb-copy-feedback');
-       const pythonCopyFeedback = document.getElementById('python-copy-feedback');
        const binaryCopyFeedback = document.getElementById('binary-copy-feedback');
 
        // Color Simulation Tab Elements
@@ -693,17 +576,13 @@
        const lightColorSelect = document.getElementById('light-color-select');
        const objectPreviewBox = document.getElementById('object-preview-box');
        const lightPreviewBox = document.getElementById('light-preview-box');
-       const objectColorPicker = document.getElementById('object-color-picker');
-       const lightColorPicker = document.getElementById('light-color-picker');
        const mixedResultBox = document.getElementById('mixed-result-box');
        const mixerRgbOutput = document.getElementById('mixer-rgb-output');
-       const mixerPythonOutput = document.getElementById('mixer-python-output');
        const mixerBinaryOutput = document.getElementById('mixer-binary-output');
        const mixerRgbCopyFeedback = document.getElementById('mixer-rgb-copy-feedback');
-       const mixerPythonCopyFeedback = document.getElementById('mixer-python-copy-feedback');
        const mixerBinaryCopyFeedback = document.getElementById('mixer-binary-copy-feedback');
 
-       // Predefined Colors for Simulation (Expanded)
+       // Predefined Colors for Simulation (RGB values)
        const colorDefinitions = {
            'red': [255, 0, 0],
            'green': [0, 255, 0],
@@ -712,31 +591,12 @@
            'magenta': [255, 0, 255],
            'cyan': [0, 255, 255],
            'white': [255, 255, 255],
-           'black': [0, 0, 0],
-           'gray': [128, 128, 128],
-           'purple': [128, 0, 128],
-           'orange': [255, 165, 0],
-           'pink': [255, 192, 203],
-           'brown': [165, 42, 42],
-           'beige': [245, 245, 220],
-           'turquoise': [64, 224, 208],
-           'lime': [0, 255, 0],
-           'indigo': [75, 0, 130],
-           'violet': [238, 130, 238],
-           'maroon': [128, 0, 0],
-           'navy': [0, 0, 128],
-           'olive': [128, 128, 0],
-           'teal': [0, 128, 128],
-           'coral': [255, 127, 127],
-           'salmon': [250, 128, 114],
-           'gold': [255, 215, 0],
-           'silver': [192, 192, 192],
-           'custom': [255, 255, 255] // Default for custom, updated by picker
+           'black': [0, 0, 0]
        };
 
        // --- Functionality Logic ---
 
-       // Updates RGB Mixer tab
+       // Updates the RGB Mixer tab's display based on input source
        function updateRgbMixer(source = 'sliders') {
            let r, g, b;
 
@@ -744,13 +604,14 @@
                r = parseInt(redSlider.value);
                g = parseInt(greenSlider.value);
                b = parseInt(blueSlider.value);
-               colorPickerInput.value = rgbToHex(r, g, b);
+               colorPickerInput.value = rgbToHex(r, g, b); // Sync native picker
            } else if (source === 'picker') {
                const hex = colorPickerInput.value;
                const rgb = hexToRgb(hex);
                r = rgb.r;
                g = rgb.g;
                b = rgb.b;
+               // Sync sliders
                redSlider.value = r;
                greenSlider.value = g;
                blueSlider.value = b;
@@ -761,104 +622,94 @@
            greenValueSpan.textContent = g;
            blueValueSpan.textContent = b;
 
+           // Update code outputs
            hexOutput.textContent = `HEX: ${rgbToHex(r, g, b).toUpperCase()}`;
            rgbOutput.textContent = `RGB: rgb(${r}, ${g}, ${b})`;
-           pythonOutput.textContent = `Python RGB: [${r}, ${g}, ${b}]`;
            binaryOutput.textContent = `Binary: [${decimalToBinary(r)}, ${decimalToBinary(g)}, ${decimalToBinary(b)}]`;
 
+           // Append copy feedback spans (ensuring they exist for event listeners)
            if (!hexOutput.querySelector('.copy-feedback')) hexOutput.appendChild(hexCopyFeedback);
            if (!rgbOutput.querySelector('.copy-feedback')) rgbOutput.appendChild(rgbCopyFeedback);
-           if (!pythonOutput.querySelector('.copy-feedback')) pythonOutput.appendChild(pythonCopyFeedback);
            if (!binaryOutput.querySelector('.copy-feedback')) binaryOutput.appendChild(binaryCopyFeedback);
        }
 
-       // Updates Color Simulation tab
+       // Updates the Color Simulation tab's display
        function updateColorSimulation() {
-           let objectRgb, lightRgb;
+           const objectColorName = objectColorSelect.value;
+           const lightColorName = lightColorSelect.value;
 
-           // Handle object color
-           if (objectColorSelect.value === 'custom') {
-               const hex = objectColorPicker.value;
-               objectRgb = hexToRgb(hex);
-               objectPreviewBox.style.backgroundColor = `rgb(${objectRgb.r}, ${objectRgb.g}, ${objectRgb.b})`;
-           } else {
-               objectRgb = colorDefinitions[objectColorSelect.value];
-               objectPreviewBox.style.backgroundColor = `rgb(${objectRgb[0]}, ${objectRgb[1]}, ${objectRgb[2]})`;
-               objectColorPicker.value = rgbToHex(objectRgb[0], objectRgb[1], objectRgb[2]);
-           }
+           const objectRgb = colorDefinitions[objectColorName];
+           const lightRgb = colorDefinitions[lightColorName];
 
-           // Handle light color
-           if (lightColorSelect.value === 'custom') {
-               const hex = lightColorPicker.value;
-               lightRgb = hexToRgb(hex);
-               lightPreviewBox.style.backgroundColor = `rgb(${lightRgb.r}, ${lightRgb.g}, ${lightRgb.b})`;
-           } else {
-               lightRgb = colorDefinitions[lightColorSelect.value];
-               lightPreviewBox.style.backgroundColor = `rgb(${lightRgb[0]}, ${lightRgb[1]}, ${lightRgb[2]})`;
-               lightColorPicker.value = rgbToHex(lightRgb[0], lightRgb[1], lightRgb[2]);
-           }
+           objectPreviewBox.style.backgroundColor = `rgb(${objectRgb[0]}, ${objectRgb[1]}, ${objectRgb[2]})`;
+           lightPreviewBox.style.backgroundColor = `rgb(${lightRgb[0]}, ${lightRgb[1]}, ${lightRgb[2]})`;
 
-           // Subtractive mixing logic
-           const mixedR = (objectRgb.r > 0 && lightRgb.r > 0) ? Math.min(objectRgb.r, lightRgb.r) : 0;
-           const mixedG = (objectRgb.g > 0 && lightRgb.g > 0) ? Math.min(objectRgb.g, lightRgb.g) : 0;
-           const mixedB = (objectRgb.b > 0 && lightRgb.b > 0) ? Math.min(objectRgb.b, lightRgb.b) : 0;
+           // Subtractive mixing logic: only reflect colors present in both object and light
+           const mixedR = (objectRgb[0] > 0 && lightRgb[0] > 0) ? Math.min(objectRgb[0], lightRgb[0]) : 0;
+           const mixedG = (objectRgb[1] > 0 && lightRgb[1] > 0) ? Math.min(objectRgb[1], lightRgb[1]) : 0;
+           const mixedB = (objectRgb[2] > 0 && lightRgb[2] > 0) ? Math.min(objectRgb[2], lightRgb[2]) : 0;
 
            mixedResultBox.style.backgroundColor = `rgb(${mixedR}, ${mixedG}, ${mixedB})`;
 
            mixerRgbOutput.textContent = `RGB: rgb(${mixedR}, ${mixedG}, ${mixedB})`;
-           mixerPythonOutput.textContent = `Python RGB: [${mixedR}, ${mixedG}, ${mixedB}]`;
            mixerBinaryOutput.textContent = `Binary: [${decimalToBinary(mixedR)}, ${decimalToBinary(mixedG)}, ${decimalToBinary(mixedB)}]`;
 
+           // Append copy feedback spans (ensuring they exist)
            if (!mixerRgbOutput.querySelector('.copy-feedback')) mixerRgbOutput.appendChild(mixerRgbCopyFeedback);
-           if (!mixerPythonOutput.querySelector('.copy-feedback')) mixerPythonOutput.appendChild(mixerPythonCopyFeedback);
            if (!mixerBinaryOutput.querySelector('.copy-feedback')) mixerBinaryOutput.appendChild(mixerBinaryCopyFeedback);
        }
 
-       // Handles tab switching with animation
+       // Handles switching between tabs with animated transition
        function switchTab(targetTabId) {
            const currentActiveTabContent = document.querySelector('.tab-content.active');
            const nextActiveTabContent = document.getElementById(targetTabId);
 
            if (!nextActiveTabContent || currentActiveTabContent === nextActiveTabContent) {
-               return;
+               return; // Do nothing if already on target tab or tab doesn't exist
            }
 
            const currentActiveTabButton = document.querySelector('.tab-button.active');
            const nextActiveTabButton = document.querySelector(`.tab-button[data-tab="${targetTabId}"]`);
 
+           // Update active button styling
            if (currentActiveTabButton) currentActiveTabButton.classList.remove('active');
            if (nextActiveTabButton) nextActiveTabButton.classList.add('active');
 
+           // Determine slide direction for animation
            const currentTabIndex = Array.from(tabButtons).indexOf(currentActiveTabButton);
            const nextTabIndex = Array.from(tabButtons).indexOf(nextActiveTabButton);
            const slideOutDirection = (nextTabIndex > currentTabIndex) ? '-100%' : '100%';
            const slideInStart = (nextTabIndex > currentTabIndex) ? '100%' : '-100%';
 
+           // Animate current tab out
            if (currentActiveTabContent) {
                currentActiveTabContent.style.transform = `translateX(${slideOutDirection})`;
                currentActiveTabContent.style.opacity = '0';
-               currentActiveTabContent.style.pointerEvents = 'none';
+               currentActiveTabContent.style.pointerEvents = 'none'; // Disable interaction
 
                currentActiveTabContent.addEventListener('transitionend', function handler() {
                    currentActiveTabContent.classList.remove('active');
-                   currentActiveTabContent.style.transform = '';
-                   currentActiveTabContent.style.opacity = '';
-                   currentActiveTabContent.style.visibility = 'hidden';
+                   currentActiveTabContent.style.transform = ''; // Reset for next use
+                   currentActiveTabContent.style.opacity = ''; // Reset opacity
+                   currentActiveTabContent.style.visibility = 'hidden'; // Hide completely
                    currentActiveTabContent.removeEventListener('transitionend', handler);
                }, { once: true });
            }
 
-           nextActiveTabContent.style.transform = `translateX(${slideInStart})`;
+           // Prepare and animate next tab in
+           nextActiveTabContent.style.transform = `translateX(${slideInStart})`; // Set initial position
            nextActiveTabContent.style.opacity = '0';
-           nextActiveTabContent.style.visibility = 'visible';
-           nextActiveTabContent.style.pointerEvents = 'auto';
+           nextActiveTabContent.style.visibility = 'visible'; // Make it visible for transition
+           nextActiveTabContent.style.pointerEvents = 'auto'; // Enable interaction
 
+           // Small timeout to allow CSS to register the initial transform before starting the slide
            setTimeout(() => {
                nextActiveTabContent.classList.add('active');
-               nextActiveTabContent.style.transform = 'translateX(0)';
+               nextActiveTabContent.style.transform = 'translateX(0)'; // Slide to center
                nextActiveTabContent.style.opacity = '1';
-           }, 10);
+           }, 10); // Very small delay
 
+           // Initialize content for the newly active tab
            if (targetTabId === 'rgb') {
                updateRgbMixer();
            } else if (targetTabId === 'mixing') {
@@ -866,20 +717,21 @@
            }
        }
 
-       // --- Event Listeners ---
+       // --- Event Listener Registration (Ensuring DOM is Ready) ---
        document.addEventListener('DOMContentLoaded', () => {
-           setRandomGradient();
-
+           // Set up Tab Button Click Listeners
            tabButtons.forEach(button => {
                button.addEventListener('click', () => switchTab(button.dataset.tab));
            });
 
+           // RGB Mixer Tab Event Listeners
            redSlider.addEventListener('input', () => updateRgbMixer('sliders'));
            greenSlider.addEventListener('input', () => updateRgbMixer('sliders'));
            blueSlider.addEventListener('input', () => updateRgbMixer('sliders'));
-           colorPickerInput.addEventListener('input', () => updateRgbMixer('picker'));
-           colorDisplayBox.addEventListener('click', () => colorPickerInput.click());
+           colorPickerInput.addEventListener('input', () => updateRgbMixer('picker')); // Native color picker changes
+           colorDisplayBox.addEventListener('click', () => colorPickerInput.click()); // Click box to open picker
 
+           // Code Output Click-to-Copy Listeners
            hexOutput.addEventListener('click', () => {
                const textToCopy = hexOutput.textContent.replace('HEX: ', '');
                navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(hexCopyFeedback));
@@ -888,73 +740,44 @@
                const textToCopy = rgbOutput.textContent.replace('RGB: ', '');
                navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(rgbCopyFeedback));
            });
-           pythonOutput.addEventListener('click', () => {
-               const textToCopy = pythonOutput.textContent.replace('Python RGB: ', '');
-               navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(pythonCopyFeedback));
-           });
            binaryOutput.addEventListener('click', () => {
                const textToCopy = binaryOutput.textContent.replace('Binary: ', '');
                navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(binaryCopyFeedback));
            });
 
-           objectColorSelect.addEventListener('change', () => {
-               if (objectColorSelect.value === 'custom') {
-                   objectColorPicker.click();
-               }
-               updateColorSimulation();
-           });
-           lightColorSelect.addEventListener('change', () => {
-               if (lightColorSelect.value === 'custom') {
-                   lightColorPicker.click();
-               }
-               updateColorSimulation();
-           });
+           // Color Simulation Tab Event Listeners
+           objectColorSelect.addEventListener('change', updateColorSimulation);
+           lightColorSelect.addEventListener('change', updateColorSimulation);
 
-           objectColorPicker.addEventListener('input', () => {
-               objectColorSelect.value = 'custom';
-               updateColorSimulation();
-           });
-           lightColorPicker.addEventListener('input', () => {
-               lightColorSelect.value = 'custom';
-               updateColorSimulation();
-           });
-
-           objectPreviewBox.addEventListener('click', () => {
-               objectColorSelect.value = 'custom';
-               objectColorPicker.click();
-           });
-           lightPreviewBox.addEventListener('click', () => {
-               lightColorSelect.value = 'custom';
-               lightColorPicker.click();
-           });
-
+           // Mixer Code Output Click-to-Copy Listeners
            mixerRgbOutput.addEventListener('click', () => {
                const textToCopy = mixerRgbOutput.textContent.replace('RGB: ', '');
                navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(mixerRgbCopyFeedback));
-           });
-           mixerPythonOutput.addEventListener('click', () => {
-               const textToCopy = mixerPythonOutput.textContent.replace('Python RGB: ', '');
-               navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(mixerPythonCopyFeedback));
            });
            mixerBinaryOutput.addEventListener('click', () => {
                const textToCopy = mixerBinaryOutput.textContent.replace('Binary: ', '');
                navigator.clipboard.writeText(textToCopy).then(() => showCopyFeedback(mixerBinaryCopyFeedback));
            });
 
+
+           // --- Initial State Setup (On Page Load) ---
+           // Hide all tabs initially, then activate and initialize the default one
            tabContents.forEach(content => {
-               if (content.id !== 'rgb') {
+               if (content.id !== 'rgb') { // 'rgb' is our default tab
                    content.style.opacity = '0';
                    content.style.visibility = 'hidden';
                    content.style.position = 'absolute';
                } else {
+                   // Ensure the default tab starts active and visible
                    content.style.opacity = '1';
                    content.style.transform = 'translateX(0)';
                    content.style.visibility = 'visible';
                    content.style.position = 'static';
                }
            });
+           // Initialize the content of the default tab
            updateRgbMixer();
        });
    </script>
 </body>
-</html>
+</html> 
