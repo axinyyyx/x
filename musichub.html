@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Hub</title>
+    <link rel="shortcut icon" href="https://vimusics.vercel.app/favi-icon.jpg" type="image/x-icon">
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat, linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            color: #e0e0e0;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .btn-neon {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            text-transform: uppercase;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        .btn-neon:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+        .btn-neon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        .btn-neon:hover::before {
+            left: 100%;
+        }
+        .card {
+            background: rgba(10, 27, 42, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+        .modal-content {
+            background: rgba(10, 27, 42, 0.9);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #e0e0e0;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        #greeting {
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0, 255, 255, 0.7); }
+            to { text-shadow: 0 0 20px rgba(0, 255, 255, 1); }
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        a {
+            color: #00ffff;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #00cccc;
+        }
+    </style>
+    <!-- Orbitron Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body data-bs-theme="dark">
+    <header class="p-3 text-center">
+        <h1>Music Hub</h1>
+        <p id="greeting">Initializing...</p>
+        <button class="btn btn-neon" data-bs-toggle="modal" data-bs-target="#settingsModal">Access Settings</button>
+    </header>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel">System Configuration</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsForm">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">User Identifier</label>
+                            <input type="text" class="form-control" id="userName" placeholder="Enter your identifier">
+                        </div>
+                        <div class="mb-3">
+                            <label for="favSinger" class="form-label">Preferred Artist</label>
+                            <input type="text" class="form-control" id="favSinger" placeholder="Enter favorite artist">
+                        </div>
+                        <div class="mb-3">
+                            <label for="favSong" class="form-label">Preferred Track</label>
+                            <input type="text" class="form-control" id="favSong" placeholder="Enter favorite track">
+                        </div>
+                        <div class="mb-3 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="themeToggle">
+                            <label class="form-check-label" for="themeToggle">Dark Interface</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-neon" data-bs-dismiss="modal">Abort</button>
+                    <button type="button" class="btn btn-neon" id="saveSettings">Commit Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container my-5">
+        <!-- Music Section -->
+        <section id="music" class="mb-5">
+            <h2>Audio Portal</h2>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <a id="vituneSingerBtn" class="btn btn-neon btn-lg d-block mb-2">Access Preferred Artist on ViTune</a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a id="vituneSongBtn" class="btn btn-neon btn-lg d-block mb-2">Access Preferred Track on ViTune</a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a id="vimusicSingerBtn" class="btn btn-neon btn-lg d-block mb-2">Search Preferred Artist on ViMusic</a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a id="vimusicSongBtn" class="btn btn-neon btn-lg d-block mb-2">Search Preferred Track on ViMusic</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Developer -->
+        <section id="about-dev" class="mb-5">
+            <h2>System Architect</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Rishabh Kumar</h5>
+                    <p class="card-text">Greetings, I'm Rishabh Kumar, a code architect specializing in Python and Kotlin. Currently enhancing my expertise in Kotlin and operating on a Linux-based system. My passion lies in crafting seamless music streaming interfaces and innovative utilities. Explore my digital constructs below.</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Instagram: <a href="https://instagram.com/rishabhsahill" target="_blank">rishabhsahill</a></li>
+                        <li class="list-group-item">Facebook: <a href="https://facebook.com/rishabhsahill" target="_blank">rishabhsahill</a></li>
+                        <li class="list-group-item">X: <a href="https://x.com/rishabhsahill" target="_blank">rishabhsahill</a></li>
+                        <li class="list-group-item">GitHub: <a href="https://github.com/axinyyyx" target="_blank">axinyyyx</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Site -->
+        <section id="about-site">
+            <h2>System Overview</h2>
+            <p>This Music Hub is your gateway to a personalized audio experience. Access your preferred artists and tracks on platforms like ViTune and ViMusic. Configure your interface via the settings panel, toggle between light and dark modes, and receive time-based salutations. All user data is securely stored in local cookies for uninterrupted access.</p>
+        </section>
+    </main>
+
+    <footer class="text-center p-3">
+        &copy; 2025 Music Hub. Engineered by Rishabh Kumar.
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Cookie functions
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Greeting function
+        function updateGreeting(name) {
+            const hour = new Date().getHours();
+            let timeOfDay = "Good Morning";
+            if (hour >= 12 && hour < 18) timeOfDay = "Good Afternoon";
+            else if (hour >= 18) timeOfDay = "Good Evening";
+            document.getElementById('greeting').textContent = `${timeOfDay}${name ? ', ' + name : ''}!`;
+        }
+
+        // Load settings
+        window.onload = function() {
+            const userName = getCookie('userName');
+            const favSinger = getCookie('favSinger');
+            const favSong = getCookie('favSong');
+            const theme = getCookie('theme') || 'dark';
+
+            if (userName) document.getElementById('userName').value = userName;
+            if (favSinger) document.getElementById('favSinger').value = favSinger;
+            if (favSong) document.getElementById('favSong').value = favSong;
+
+            document.body.setAttribute('data-bs-theme', theme);
+            document.getElementById('themeToggle').checked = (theme === 'dark');
+
+            updateGreeting(userName);
+            updateLinks(favSinger, favSong);
+        };
+
+        // Update links
+        function updateLinks(singer, song) {
+            const encodedSinger = encodeURIComponent(singer || 'honey singh');
+            const encodedSong = encodeURIComponent(song || 'honey singh');
+            
+            document.getElementById('vituneSingerBtn').href = `https://vitune-web.vercel.app/#${encodedSinger}`;
+            document.getElementById('vituneSingerBtn').textContent = `Access ${singer || 'Preferred Artist'} on ViTune`;
+            
+            document.getElementById('vituneSongBtn').href = `https://vitune-web.vercel.app/#${encodedSong}`;
+            document.getElementById('vituneSongBtn').textContent = `Access ${song || 'Preferred Track'} on ViTune`;
+            
+            document.getElementById('vimusicSingerBtn').href = `https://vimusics.vercel.app/search/${encodedSinger}`;
+            document.getElementById('vimusicSingerBtn').textContent = `Search ${singer || 'Preferred Artist'} on ViMusic`;
+            
+            document.getElementById('vimusicSongBtn').href = `https://vimusics.vercel.app/search/${encodedSong}`;
+            document.getElementById('vimusicSongBtn').textContent = `Search ${song || 'Preferred Track'} on ViMusic`;
+        }
+
+        // Save settings
+        document.getElementById('saveSettings').addEventListener('click', function() {
+            const userName = document.getElementById('userName').value;
+            const favSinger = document.getElementById('favSinger').value;
+            const favSong = document.getElementById('favSong').value;
+            const theme = document.getElementById('themeToggle').checked ? 'dark' : 'light';
+
+            setCookie('userName', userName, 30);
+            setCookie('favSinger', favSinger, 30);
+            setCookie('favSong', favSong, 30);
+            setCookie('theme', theme, 30);
+
+            document.body.setAttribute('data-bs-theme', theme);
+            updateGreeting(userName);
+            updateLinks(favSinger, favSong);
+
+            bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();
+        });
+
+        // Theme toggle live
+        document.getElementById('themeToggle').addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            document.body.setAttribute('data-bs-theme', theme);
+            if (theme === 'light') {
+                document.body.style.background = 'linear-gradient(135deg, #e0e0e0 0%, #b0bec5 100%)';
+                document.body.style.color = '#0d1b2a';
+            } else {
+                document.body.style.background = "url('https://www.transparenttextures.com/patterns/stardust.png') repeat, linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%)";
+                document.body.style.color = '#e0e0e0';
+            }
+        });
+    </script>
+</body>
+</html>
