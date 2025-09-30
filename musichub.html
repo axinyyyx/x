@@ -218,7 +218,7 @@
             let timeOfDay = "Good Morning";
             if (hour >= 12 && hour < 18) timeOfDay = "Good Afternoon";
             else if (hour >= 18) timeOfDay = "Good Evening";
-            document.getElementById('greeting').textContent = `${timeOfDay}${name ? ', ' + name : ''}!`;
+            document.getElementById('greeting').textContent = `${timeOfDay}${name ? ', ' + name.split(" ")[0] : ''}!`;
         }
 
         // Load settings
